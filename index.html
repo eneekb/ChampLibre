@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChampLibre - Laissez le champ libre à votre collaboration</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        .signout-btn-mobile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        /* App Header */
+        .app-header {
+            background-color: #2c5530;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 101;
+        }
+        
+        @media (min-width: 768px) {
+            .app-header {
+                padding: 15px;
+                font-size: 24px;
+            }
+        }
+        
+        /* Navigation */
+        .nav-bar {
+            background-color: #2c5530;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 40px;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        @media (min-width: 768px) {
+            .nav-bar {
+                top: 54px;
+                position: sticky;
+                justify-content: center;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .nav-bar {
+                padding: 15px;
+            }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-menu {
+                gap: 20px;
+            }
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item.hamburger-nav {
+            padding: 6px 8px;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-item {
+                padding: 8px 16px;
+                font-size: 24px;
+            }
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-item.signout-nav {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-item.signout-nav {
+                display: flex;
+            }
+        }
+        
+        .signout-btn-mobile {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .signout-btn-mobile {
+                display: none;
+            }
+        }
+        
+        /* Container principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+        }
+        
+        /* Écran de connexion */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 70px);
+            text-align: center;
+        }
+        
+        .login-card {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        @media (min-width: 768px) {
+            .login-card {
+                padding: 60px 40px;
+                width: 100%;
+            }
+        }
+        
+        .login-logo {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            color: #2c5530;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .login-title {
+                font-size: 32px;
+            }
+        }
+        
+        .login-slogan {
+            color: #28a745;
+            font-style: italic;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        
+        @media (min-width: 768px) {
+            .login-slogan {
+                font-size: 16px;
+            }
+        }
+        
+        .login-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .login-btn:hover {
+            background-color: #218838;
+        }
+        
+        .login-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        /* Page d'accueil */
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .home-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 40px;
+            }
+        }
+        
+        .home-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            touch-action: manipulation;
+        }
+        
+        @media (min-width: 768px) {
+            .home-card {
+                padding: 30px;
+            }
+        }
+        
+        .home-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .home-card-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .home-card-icon {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+        }
+        
+        .home-card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5530;
+        }
+        
+        @media (min-width: 768px) {
+            .home-card-title {
+                font-size: 24px;
+            }
+        }
+        
+        .home-card.clients { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        .home-card.paniers { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+        .home-card.distribution { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+        .home-card.stats { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); }
+        
+        /* Sections */
+        .section {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        @media (min-width: 768px) {
+            .section {
+                padding: 30px;
+            }
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .section-header {
+                margin-bottom: 30px;
+            }
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #2c5530;
+            margin: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 28px;
+            }
+        }
+        
+        /* Status */
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* Distribution spécifique */
+        .date-info {
+            color: #666;
+            margin-bottom: 20px;
+            margin-top: -10px;
+            font-size: 18px;
+        }
+        
+        .clients-list {
+            margin-top: 20px;
+        }
+        
+        .client-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        @media (min-width: 768px) {
+            .client-item {
+                padding: 15px;
+            }
+        }
+        
+        .client-item.present {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .client-item.absent {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .client-item.report {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .client-name {
+            font-weight: bold;
+            font-size: 16px;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .client-name {
+                font-size: 18px;
+            }
+        }
+        
+        .client-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .client-actions {
+                gap: 10px;
+            }
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: 2px solid;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 40px;
+            touch-action: manipulation;
+        }
+        
+        @media (min-width: 768px) {
+            .action-btn {
+                padding: 8px 16px;
+            }
+        }
+        
+        .action-btn.present {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .action-btn.present.active {
+            background: #28a745;
+            color: white;
+        }
+        
+        .action-btn.absent {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .action-btn.absent.active {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.report {
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+        
+        .action-btn.report.active {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .save-distribution-btn {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 15px;
+            cursor: pointer;
+        }
+        
+        .save-distribution-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Placeholder pour les sections vides */
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .placeholder-text {
+            font-size: 18px;
+        }
+        
+        button {
+            font-family: inherit;
+            touch-action: manipulation;
+        }
+        
+        /* Styles pour la section Clients */
+        .clients-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .clients-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .search-add-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .search-add-container {
+                width: auto;
+            }
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        @media (min-width: 768px) {
+            .search-input {
+                width: 250px;
+                flex: none;
+            }
+        }
+        
+        .search-input:focus {
+            border-color: #2c5530;
+        }
+        
+        .add-client-btn-small {
+            padding: 8px 14px;
+            background: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            min-width: 40px;
+        }
+        
+        .add-client-btn-small:hover {
+            background: #ff7700;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .filter-btn {
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        
+        @media (min-width: 768px) {
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+        
+        .filter-btn.active {
+            background: #2c5530;
+            color: white;
+            border-color: #2c5530;
+        }
+        
+        .clients-list-container {
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .client-list-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @media (min-width: 768px) {
+            .client-list-item {
+                padding: 8px 15px;
+            }
+        }
+        
+        .client-list-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .client-list-item.inactive {
+            opacity: 0.6;
+        }
+        
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .client-name-display {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .client-solde-display {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .client-solde-display.positive {
+            color: #28a745;
+        }
+        
+        .client-solde-display.negative {
+            color: #dc3545;
+        }
+        
+        .client-status-badge {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            color: #666;
+        }
+        
+        .client-status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        /* Overlay et formulaire popup */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .client-form-popup {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .client-form-popup {
+                padding: 30px;
+            }
+        }
+        
+        .client-form-popup h2 {
+            margin-top: 0;
+            color: #2c5530;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c5530;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal !important;
+        }
+        
+        .checkbox-label input {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .cancel-btn,
+        .submit-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+        
+        .submit-btn {
+            background: #007bff;
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+        
+        /* Panneau de détails */
+        .client-details-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 500;
+            overflow-y: auto;
+            display: block !important;
+            pointer-events: auto; /* S'assurer que les clics passent */
+        }
+        
+        @media (max-width: 768px) {
+            .client-details-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        
+        .client-details-panel.show {
+            right: 0;
+        }
+        
+        .client-details-panel.hidden {
+            display: none !important;
+        }
+        
+        .panel-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .close-panel-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-panel-btn:hover {
+            color: #333;
+        }
+        
+        .client-detail-row {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .client-detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .client-detail-value {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .client-detail-value.with-action {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 600;
+        }
+        
+        .client-solde {
+            font-weight: bold;
+        }
+        
+        .client-solde.positive {
+            color: #28a745;
+        }
+        
+        .client-solde.negative {
+            color: #dc3545;
+        }
+        
+        .edit-client-btn {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        
+        .edit-client-btn:hover {
+            background: #ff7700;
+        }
+        
+        a.call-btn, button.call-btn {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            min-width: 44px;
+            min-height: 44px;
+            line-height: 28px;
+            text-align: center;
+        }
+        
+        a.call-btn:hover, button.call-btn:hover {
+            background: #ff7700;
+            color: white;
+        }
+        
+        a.call-btn:active, button.call-btn:active {
+            background: #ff6600;
+        }
+        
+        a.call-btn.mobile-only, button.call-btn.mobile-only {
+            display: inline-block;
+        }
+        
+        @media (min-width: 768px) {
+            a.call-btn.mobile-only, button.call-btn.mobile-only {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- App Header -->
+    <div class="app-header hidden" id="appHeader">
+        🥬 ChampLibre
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav-bar hidden" id="mainNav">
+        <div class="nav-menu" id="navMenu">
+            <a class="nav-item hamburger-nav" onclick="showSection('home')" title="Menu">
+                <div style="display: inline-block;">
+                    <div style="width: 20px; height: 2px; background-color: white; margin: 3px 0; border-radius: 2px;"></div>
+                    <div style="width: 20px; height: 2px; background-color: white; margin: 3px 0; border-radius: 2px;"></div>
+                    <div style="width: 20px; height: 2px; background-color: white; margin: 3px 0; border-radius: 2px;"></div>
+                </div>
+            </a>
+            <a class="nav-item" onclick="showSection('clients')" title="Clients">👨‍👩‍👧‍👦</a>
+            <a class="nav-item" onclick="showSection('paniers')" title="Composition">🥬</a>
+            <a class="nav-item" onclick="showSection('distribution')" title="Distribution">📦</a>
+            <a class="nav-item" onclick="showSection('stats')" title="Statistiques">📊</a>
+            <a class="nav-item signout-nav" onclick="handleSignoutClick()" title="Déconnexion">🚪</a>
+        </div>
+        <button class="signout-btn-mobile" onclick="handleSignoutClick()">
+            Déconnexion
+        </button>
+    </nav>
+
+    <div class="main-container">
+        <!-- Écran de connexion -->
+        <div id="loginScreen" class="login-screen">
+            <div class="login-card">
+                <div class="login-logo">🥬</div>
+                <h1 class="login-title">ChampLibre</h1>
+                <p class="login-slogan">Laissez le champ libre à la collaboration</p>
+                <div id="loginStatus" class="status hidden" style="margin-bottom: 20px;"></div>
+                <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
+                    Se connecter avec Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenu principal (caché au départ) -->
+        <div id="mainContent" class="hidden">
+            <div id="status" class="status hidden"></div>
+
+            <!-- Section Accueil -->
+            <div id="home" class="section active">
+                <div class="home-grid">
+                    <div class="home-card clients" onclick="showSection('clients')">
+                        <div class="home-card-icon">👨‍👩‍👧‍👦</div>
+                        <div class="home-card-title">Clients</div>
+                    </div>
+                    
+                    <div class="home-card paniers" onclick="showSection('paniers')">
+                        <div class="home-card-icon">🥬</div>
+                        <div class="home-card-title">Composition</div>
+                    </div>
+                    
+                    <div class="home-card distribution" onclick="showSection('distribution')">
+                        <div class="home-card-icon">📦</div>
+                        <div class="home-card-title">Distribution</div>
+                    </div>
+                    
+                    <div class="home-card stats" onclick="showSection('stats')">
+                        <div class="home-card-icon">📊</div>
+                        <div class="home-card-title">Statistiques</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Clients -->
+            <div id="clients" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">👨‍👩‍👧‍👦 Gestion des Clients</h1>
+                </div>
+                
+                <!-- Barre de recherche et filtres -->
+                <div class="clients-controls">
+                    <div class="search-add-container">
+                        <input type="text" id="searchClients" class="search-input" placeholder="🔍 Rechercher un client..." onkeyup="filterClients()">
+                        <button class="add-client-btn-small" onclick="showClientForm()" title="Ajouter un client">+</button>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="setClientFilter('all')">Tous</button>
+                        <button class="filter-btn" onclick="setClientFilter('active')">Actifs</button>
+                    </div>
+                </div>
+                
+                <!-- Liste des clients -->
+                <div id="clientsListContainer" class="clients-list-container">
+                    <!-- Sera rempli dynamiquement -->
+                </div>
+                
+                <!-- Formulaire client (popup) -->
+                <div id="clientFormOverlay" class="overlay hidden" onclick="hideClientForm(event)">
+                    <div class="client-form-popup" onclick="event.stopPropagation()">
+                        <h2 id="clientFormTitle">Nouveau Client</h2>
+                        <form id="clientForm" onsubmit="saveClient(event)">
+                            <input type="hidden" id="clientIndex" value="-1">
+                            
+                            <div class="form-group">
+                                <label>Nom *</label>
+                                <input type="text" id="clientNom" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Prénom *</label>
+                                <input type="text" id="clientPrenom" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="clientEmail">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Téléphone</label>
+                                <input type="tel" id="clientTelephone">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Date d'inscription</label>
+                                <input type="date" id="clientDateInscription">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Solde (€)</label>
+                                <input type="number" id="clientSolde" step="0.01" value="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Commentaires</label>
+                                <textarea id="clientCommentaires" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="clientActif" checked>
+                                    Client actif
+                                </label>
+                            </div>
+                            
+                            <div class="form-buttons">
+                                <button type="button" class="cancel-btn" onclick="hideClientForm()">Annuler</button>
+                                <button type="submit" class="submit-btn">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Détails client (panneau latéral) -->
+                <div id="clientDetailsPanel" class="client-details-panel hidden">
+                    <div class="panel-header">
+                        <h3>Détails du client</h3>
+                        <button class="close-panel-btn" onclick="hideClientDetails()">×</button>
+                    </div>
+                    <div id="clientDetailsContent">
+                        <!-- Sera rempli dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Paniers -->
+            <div id="paniers" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">🥬 Composition des Paniers</h1>
+                </div>
+                <div class="placeholder">
+                    <div class="placeholder-icon">🥬</div>
+                    <div class="placeholder-text">Section en construction<br>Ici tu pourras composer les paniers avec Tibère</div>
+                </div>
+                <div style="margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 10px; text-align: center;">
+                    <h3 style="color: #ff8c00; margin-bottom: 20px;">🧪 Test Firefox Android</h3>
+                    <p style="margin-bottom: 20px;">Clique sur ces liens pour tester :</p>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <a href="tel:0601020304" style="background: #ff8c00; color: white; padding: 15px 25px; border-radius: 5px; text-decoration: none; font-size: 18px;">📞 Appeler</a>
+                        <a href="sms:0601020304" style="background: #ff8c00; color: white; padding: 15px 25px; border-radius: 5px; text-decoration: none; font-size: 18px;">💬 SMS</a>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 12px; color: #666;">Si ces boutons fonctionnent, le problème vient du panneau client.</p>
+                </div>
+            </div>
+
+            <!-- Section Distribution -->
+            <div id="distribution" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">📦 Distribution du jour</h1>
+                </div>
+                <div class="date-info" id="dateInfo"></div>
+                
+                <div class="summary" id="summary">
+                    Présents: <span id="presentCount">0</span> | 
+                    Absents: <span id="absentCount">0</span> | 
+                    Reports: <span id="reportCount">0</span>
+                </div>
+                
+                <div class="clients-list" id="clientsList"></div>
+                
+                <button class="save-distribution-btn" onclick="saveDistribution()">
+                    💾 Enregistrer la distribution
+                </button>
+            </div>
+
+            <!-- Section Statistiques -->
+            <div id="stats" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">📊 Statistiques et Analyses</h1>
+                </div>
+                <div class="placeholder">
+                    <div class="placeholder-icon">📊</div>
+                    <div class="placeholder-text">Section en construction<br>Ici tu verras les statistiques et la répartition des recettes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google API -->
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <script>
+        // Configuration
+        const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
+        const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
+        const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
+        
+        // Structure du Google Sheet:
+        // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
+        // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
+        // Feuille "Paniers": A=Date, B=Légume, C=Quantité, D=Producteur, E=Prix
+        
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+        
+        // Note sur la persistance de connexion :
+        // L'app tente automatiquement de se reconnecter à chaque chargement de page
+        // en utilisant la session Google existante (valable ~1h).
+        // Si la session est expirée, l'utilisateur devra se reconnecter manuellement.
+        
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+        let clients = [];
+        let allClients = []; // Pour la section Clients
+        let distributionStatus = {};
+        let currentSection = 'home';
+        let clientFilter = 'all';
+        let hasTriedAutoConnect = false; // Pour éviter les boucles infinies
+        
+        // Date du jour
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('fr-FR');
+        document.getElementById('dateInfo').textContent = dateStr;
+
+        // Navigation
+        function showSection(sectionName) {
+            // Fermer les panneaux ouverts
+            if (currentSection === 'clients') {
+                const panel = document.getElementById('clientDetailsPanel');
+                if (panel) {
+                    panel.classList.remove('show');
+                    setTimeout(() => panel.classList.add('hidden'), 300);
+                }
+                document.getElementById('clientFormOverlay').classList.add('hidden');
+            }
+            
+            // Cacher toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section demandée
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Mettre à jour le menu actif
+            document.querySelectorAll('.nav-item').forEach((item, index) => {
+                item.classList.remove('active');
+                // Ne pas marquer le hamburger ou déconnexion comme actif
+                if (!item.classList.contains('hamburger-nav') && !item.classList.contains('signout-nav')) {
+                    const itemText = item.textContent.toLowerCase();
+                    if ((sectionName === 'clients' && itemText.includes('👨‍👩‍👧‍👦')) ||
+                        (sectionName === 'paniers' && itemText.includes('🥬')) ||
+                        (sectionName === 'distribution' && itemText.includes('📦')) ||
+                        (sectionName === 'stats' && itemText.includes('📊'))) {
+                        item.classList.add('active');
+                    }
+                }
+            });
+            
+            currentSection = sectionName;
+            
+            // Charger les données si nécessaire
+            if (sectionName === 'distribution' && gapi.client.getToken() !== null) {
+                loadClients();
+            } else if (sectionName === 'clients' && gapi.client.getToken() !== null) {
+                loadAllClients();
+            }
+        }
+
+        // Google API
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            try {
+                await gapi.client.init({
+                    apiKey: API_KEY,
+                    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                });
+                gapiInited = true;
+                maybeEnableButtons();
+            } catch (err) {
+                console.error('Erreur initialisation GAPI:', err);
+                const authorizeBtn = document.getElementById('authorizeBtn');
+                authorizeBtn.disabled = false;
+                authorizeBtn.textContent = 'Erreur - Recharger la page';
+            }
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '', 
+            });
+            gisInited = true;
+            maybeEnableButtons();
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                const authorizeBtn = document.getElementById('authorizeBtn');
+                authorizeBtn.disabled = false;
+                authorizeBtn.textContent = 'Se connecter avec Google';
+                
+                // Toujours essayer de se reconnecter automatiquement au chargement
+                tryAutoConnect();
+            }
+        }
+        
+        function tryAutoConnect() {
+            if (hasTriedAutoConnect) return;
+            hasTriedAutoConnect = true;
+            
+            const loginStatus = document.getElementById('loginStatus');
+            const authorizeBtn = document.getElementById('authorizeBtn');
+            
+            // Désactiver le bouton pendant la tentative
+            authorizeBtn.disabled = true;
+            authorizeBtn.textContent = 'Connexion automatique...';
+            
+            loginStatus.textContent = 'Reconnexion en cours...';
+            loginStatus.className = 'status loading';
+            loginStatus.classList.remove('hidden');
+            
+            // Timeout de sécurité au cas où il n'y a pas de réponse
+            const timeout = setTimeout(() => {
+                loginStatus.classList.add('hidden');
+                authorizeBtn.disabled = false;
+                authorizeBtn.textContent = 'Se connecter avec Google';
+            }, 5000);
+            
+            tokenClient.callback = async (resp) => {
+                clearTimeout(timeout);
+                
+                if (resp.error !== undefined) {
+                    // Échec de la connexion automatique
+                    loginStatus.classList.add('hidden');
+                    authorizeBtn.disabled = false;
+                    authorizeBtn.textContent = 'Se connecter avec Google';
+                    return;
+                }
+                
+                // Vérifier que le token est valide
+                try {
+                    // Test avec un appel simple
+                    await gapi.client.sheets.spreadsheets.get({
+                        spreadsheetId: SPREADSHEET_ID,
+                        fields: 'spreadsheetId'
+                    });
+                    
+                    // Connexion automatique réussie
+                    loginStatus.textContent = 'Connexion réussie!';
+                    loginStatus.className = 'status success';
+                    setTimeout(() => {
+                        loginStatus.classList.add('hidden');
+                        showMainInterface();
+                    }, 500);
+                    
+                    // Charger les données si nécessaire
+                    if (currentSection === 'distribution') {
+                        await loadClients();
+                    } else if (currentSection === 'clients') {
+                        await loadAllClients();
+                    }
+                } catch (err) {
+                    // Token invalide ou expiré
+                    loginStatus.classList.add('hidden');
+                    authorizeBtn.disabled = false;
+                    authorizeBtn.textContent = 'Se connecter avec Google';
+                    gapi.client.setToken('');
+                }
+            };
+            
+            // Essayer de se connecter sans prompt
+            setTimeout(() => {
+                tokenClient.requestAccessToken({prompt: ''});
+            }, 100);
+        }
+
+        function handleAuthClick() {
+            const loginStatus = document.getElementById('loginStatus');
+            loginStatus.textContent = 'Connexion en cours...';
+            loginStatus.className = 'status loading';
+            loginStatus.classList.remove('hidden');
+            
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    // Si l'erreur est "immediate_failed", essayer avec prompt
+                    if (resp.error === 'immediate_failed') {
+                        loginStatus.textContent = 'Autorisation requise...';
+                        tokenClient.requestAccessToken({prompt: 'consent'});
+                        return;
+                    }
+                    
+                    loginStatus.textContent = 'Erreur de connexion. Veuillez réessayer.';
+                    loginStatus.className = 'status error';
+                    console.error('Erreur auth:', resp);
+                    return;
+                }
+                
+                // Connexion réussie
+                loginStatus.textContent = 'Connexion réussie!';
+                loginStatus.className = 'status success';
+                setTimeout(() => {
+                    loginStatus.classList.add('hidden');
+                    showMainInterface();
+                }, 500);
+                
+                // Charger les données si nécessaire
+                if (currentSection === 'distribution') {
+                    await loadClients();
+                } else if (currentSection === 'clients') {
+                    await loadAllClients();
+                }
+            };
+
+            // Toujours essayer de se connecter sans prompt d'abord
+            tokenClient.requestAccessToken({prompt: ''});
+        }
+        
+        function showMainInterface() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('appHeader').classList.remove('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+            
+            // Message de succès
+            const status = document.getElementById('status');
+            status.textContent = 'Connecté avec succès!';
+            status.className = 'status success';
+            status.classList.remove('hidden');
+            
+            // Masquer le message après 3 secondes
+            setTimeout(() => {
+                status.classList.add('hidden');
+            }, 3000);
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+                
+                // Réinitialiser pour permettre une nouvelle tentative
+                hasTriedAutoConnect = false;
+                
+                // Retour à l'écran de connexion
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+                document.getElementById('appHeader').classList.add('hidden');
+                document.getElementById('mainNav').classList.add('hidden');
+                
+                // Reset
+                showSection('home');
+                clients = [];
+                distributionStatus = {};
+                
+                // Masquer le statut de connexion
+                document.getElementById('loginStatus').classList.add('hidden');
+            }
+        }
+
+        // Fonctions Distribution
+        async function loadClients() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Chargement des clients...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Clients!A2:H100',
+                });
+                
+                const values = response.result.values;
+                if (values && values.length > 0) {
+                    clients = values
+                        .filter(row => row[4] === 'OUI') // Seulement les clients actifs
+                        .map(row => ({
+                            nom: row[0],
+                            prenom: row[1],
+                            email: row[2],
+                            telephone: row[3],
+                            fullName: `${row[0]} ${row[1]}`
+                        }));
+                    
+                    displayClients();
+                    status.textContent = `${clients.length} clients chargés`;
+                    status.className = 'status success';
+                    setTimeout(() => {
+                        status.classList.add('hidden');
+                    }, 3000);
+                } else {
+                    status.textContent = 'Aucun client trouvé';
+                    status.className = 'status error';
+                }
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+        
+        // ========== FONCTIONS CLIENTS ==========
+        
+        // Charger tous les clients pour la gestion
+        async function loadAllClients() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Chargement des clients...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Clients!A2:H100',
+                });
+                
+                const values = response.result.values || [];
+                allClients = values.map((row, index) => ({
+                    index: index + 2, // +2 car on commence à la ligne 2 dans Sheets
+                    nom: row[0] || '',
+                    prenom: row[1] || '',
+                    email: row[2] || '',
+                    telephone: row[3] || '',
+                    actif: row[4] === 'OUI',
+                    dateInscription: row[5] || '',
+                    commentaires: row[6] || '',
+                    solde: parseFloat(row[7]) || 0
+                }));
+                
+                displayClientsList();
+                status.textContent = `${allClients.length} clients chargés`;
+                status.className = 'status success';
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+        
+        // Afficher la liste des clients
+        function displayClientsList() {
+            const container = document.getElementById('clientsListContainer');
+            const searchTerm = document.getElementById('searchClients').value.toLowerCase();
+            
+            let filteredClients = allClients;
+            
+            // Filtrer par statut
+            if (clientFilter === 'active') {
+                filteredClients = filteredClients.filter(c => c.actif);
+            }
+            
+            // Filtrer par recherche
+            if (searchTerm) {
+                filteredClients = filteredClients.filter(c => 
+                    c.nom.toLowerCase().includes(searchTerm) || 
+                    c.prenom.toLowerCase().includes(searchTerm) ||
+                    c.email.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Trier par ordre alphabétique (nom puis prénom)
+            filteredClients.sort((a, b) => {
+                const nameA = a.nom.toLowerCase();
+                const nameB = b.nom.toLowerCase();
+                if (nameA !== nameB) {
+                    return nameA.localeCompare(nameB);
+                }
+                return a.prenom.toLowerCase().localeCompare(b.prenom.toLowerCase());
+            });
+            
+            container.innerHTML = '';
+            
+            if (filteredClients.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Aucun client trouvé</div>';
+                return;
+            }
+            
+            filteredClients.forEach((client, idx) => {
+                const div = document.createElement('div');
+                div.className = `client-list-item ${!client.actif ? 'inactive' : ''}`;
+                div.onclick = () => showClientDetails(client);
+                
+                const soldeClass = client.solde >= 0 ? 'positive' : 'negative';
+                const soldeDisplay = client.solde.toFixed(2) + ' €';
+                
+                div.innerHTML = `
+                    <div class="client-info">
+                        <div class="client-name-display">${client.nom} ${client.prenom}</div>
+                        <div class="client-solde-display ${soldeClass}">${soldeDisplay}</div>
+                    </div>
+                    <div class="client-status-badge ${client.actif ? 'active' : ''}">
+                        ${client.actif ? 'Actif' : 'Inactif'}
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+        
+        // Filtrer les clients
+        function filterClients() {
+            displayClientsList();
+        }
+        
+        // Changer le filtre actif/tous
+        function setClientFilter(filter) {
+            clientFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            displayClientsList();
+        }
+        
+        // Fonctions pour téléphone et SMS avec compatibilité Firefox Android
+        function makeCall(phone) {
+            if (!phone) return;
+            
+            // Petit délai pour Firefox Android
+            setTimeout(() => {
+                // Format simple - garder que les chiffres
+                const cleanNumber = phone.replace(/[^\d]/g, '');
+                const telLink = 'tel:' + cleanNumber;
+                
+                console.log('Appel vers:', telLink);
+                
+                // Forcer le changement d'URL
+                window.location.assign(telLink);
+            }, 100);
+        }
+        
+        function sendSMS(phone) {
+            if (!phone) return;
+            
+            // Petit délai pour Firefox Android
+            setTimeout(() => {
+                // Format simple - garder que les chiffres  
+                const cleanNumber = phone.replace(/[^\d]/g, '');
+                const smsLink = 'sms:' + cleanNumber;
+                
+                console.log('SMS vers:', smsLink);
+                
+                // Forcer le changement d'URL
+                window.location.assign(smsLink);
+            }, 100);
+        }
+        
+        // Afficher les détails d'un client
+        function showClientDetails(client) {
+            const panel = document.getElementById('clientDetailsPanel');
+            const content = document.getElementById('clientDetailsContent');
+            
+            // Stocker le client actuel pour l'édition
+            window.currentDetailClient = client;
+            
+            // Nettoyer le numéro de téléphone pour les liens
+            let cleanPhone = '';
+            if (client.telephone) {
+                // Enlever tous les caractères non numériques sauf le +
+                cleanPhone = client.telephone.replace(/[^\d+]/g, '');
+                console.log('Numéro original:', client.telephone);
+                console.log('Numéro nettoyé:', cleanPhone);
+            }
+            
+            // Détecter si on est sur mobile
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            const phoneHtml = client.telephone ? 
+                `<span style="margin-right: 10px;">${client.telephone}</span>
+                ${isMobile ? `<a href="tel:${cleanPhone}" class="call-btn" title="Appeler">📞</a>
+                <a href="sms:${cleanPhone}" class="call-btn" title="Envoyer un SMS">💬</a>` : ''}` : 
+                'Non renseigné';
+            
+            console.log('HTML généré pour téléphone:', phoneHtml);
+            console.log('Est mobile?', isMobile);
+            
+            const emailHtml = client.email ? 
+                `<span style="margin-right: 10px;">${client.email}</span>
+                <a href="mailto:${client.email}" class="call-btn" title="Envoyer un email">✉️</a>` : 
+                'Non renseigné';
+            
+            content.innerHTML = `
+                <div style="padding: 15px 20px 10px; margin-bottom: 10px;">
+                    <button class="edit-client-btn" onclick="editClient(window.currentDetailClient)" style="width: 100%;">
+                        ✏️ Modifier
+                    </button>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Nom complet</div>
+                    <div class="client-detail-value">${client.nom} ${client.prenom}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Email</div>
+                    <div class="client-detail-value with-action">${emailHtml}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Téléphone</div>
+                    <div class="client-detail-value with-action">${phoneHtml}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Date d'inscription</div>
+                    <div class="client-detail-value">${client.dateInscription ? new Date(client.dateInscription).toLocaleDateString('fr-FR') : 'Non renseignée'}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Solde</div>
+                    <div class="client-detail-value client-solde ${client.solde >= 0 ? 'positive' : 'negative'}">
+                        ${client.solde.toFixed(2)} €
+                    </div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Commentaires</div>
+                    <div class="client-detail-value">${client.commentaires || 'Aucun commentaire'}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Statut</div>
+                    <div class="client-detail-value">${client.actif ? '✅ Actif' : '❌ Inactif'}</div>
+                </div>
+            `;
+            
+            panel.classList.remove('hidden');
+            setTimeout(() => panel.classList.add('show'), 10);
+        }
+        
+        // Masquer les détails
+        function hideClientDetails() {
+            const panel = document.getElementById('clientDetailsPanel');
+            panel.classList.remove('show');
+            setTimeout(() => panel.classList.add('hidden'), 300);
+        }
+        
+        // Afficher le formulaire client
+        function showClientForm(client = null) {
+            const overlay = document.getElementById('clientFormOverlay');
+            const title = document.getElementById('clientFormTitle');
+            const form = document.getElementById('clientForm');
+            
+            if (client) {
+                title.textContent = 'Modifier le client';
+                document.getElementById('clientIndex').value = client.index;
+                document.getElementById('clientNom').value = client.nom;
+                document.getElementById('clientPrenom').value = client.prenom;
+                document.getElementById('clientEmail').value = client.email || '';
+                document.getElementById('clientTelephone').value = client.telephone || '';
+                document.getElementById('clientDateInscription').value = client.dateInscription || '';
+                document.getElementById('clientSolde').value = client.solde || 0;
+                document.getElementById('clientCommentaires').value = client.commentaires || '';
+                document.getElementById('clientActif').checked = client.actif;
+            } else {
+                title.textContent = 'Nouveau client';
+                form.reset();
+                document.getElementById('clientIndex').value = '-1';
+                document.getElementById('clientDateInscription').value = today.toISOString().split('T')[0];
+            }
+            
+            overlay.classList.remove('hidden');
+        }
+        
+        // Éditer un client
+        function editClient(client) {
+            hideClientDetails();
+            showClientForm(client);
+        }
+        
+        // Masquer le formulaire
+        function hideClientForm(event) {
+            if (!event || event.target.id === 'clientFormOverlay') {
+                document.getElementById('clientFormOverlay').classList.add('hidden');
+            }
+        }
+        
+        // Sauvegarder un client
+        async function saveClient(event) {
+            event.preventDefault();
+            
+            const index = parseInt(document.getElementById('clientIndex').value);
+            const nom = document.getElementById('clientNom').value.trim();
+            const prenom = document.getElementById('clientPrenom').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const telephone = document.getElementById('clientTelephone').value.trim();
+            const dateInscription = document.getElementById('clientDateInscription').value;
+            const solde = document.getElementById('clientSolde').value;
+            const commentaires = document.getElementById('clientCommentaires').value.trim();
+            const actif = document.getElementById('clientActif').checked;
+            
+            // Vérifier les doublons
+            const duplicate = allClients.find(c => 
+                c.nom.toLowerCase() === nom.toLowerCase() && 
+                c.prenom.toLowerCase() === prenom.toLowerCase() &&
+                c.index !== index
+            );
+            
+            if (duplicate) {
+                alert('Un client avec ce nom et prénom existe déjà !');
+                return;
+            }
+            
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Enregistrement...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const values = [[
+                    nom,
+                    prenom,
+                    email,
+                    telephone,
+                    actif ? 'OUI' : 'NON',
+                    dateInscription,
+                    commentaires,
+                    solde
+                ]];
+                
+                if (index === -1) {
+                    // Nouveau client
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: 'Clients!A:H',
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                } else {
+                    // Mise à jour
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: `Clients!A${index}:H${index}`,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                }
+                
+                status.textContent = 'Client enregistré avec succès !';
+                status.className = 'status success';
+                hideClientForm();
+                await loadAllClients();
+                
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+
+        function displayClients() {
+            const container = document.getElementById('clientsList');
+            container.innerHTML = '';
+            
+            clients.forEach((client, index) => {
+                const div = document.createElement('div');
+                div.className = 'client-item';
+                div.id = `client-${index}`;
+                
+                div.innerHTML = `
+                    <div class="client-name">${client.fullName}</div>
+                    <div class="client-actions">
+                        <button class="action-btn present" onclick="setStatus(${index}, 'present')">✓</button>
+                        <button class="action-btn absent" onclick="setStatus(${index}, 'absent')">✗</button>
+                        <button class="action-btn report" onclick="setStatus(${index}, 'report')">⏱</button>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            updateSummary();
+        }
+
+        function setStatus(clientIndex, status) {
+            const clientDiv = document.getElementById(`client-${clientIndex}`);
+            const buttons = clientDiv.querySelectorAll('.action-btn');
+            
+            // Retirer toutes les classes active
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Si on clique sur le statut actuel, on le désélectionne
+            if (distributionStatus[clientIndex] === status) {
+                delete distributionStatus[clientIndex];
+                clientDiv.className = 'client-item';
+            } else {
+                distributionStatus[clientIndex] = status;
+                clientDiv.className = `client-item ${status}`;
+                clientDiv.querySelector(`.action-btn.${status}`).classList.add('active');
+            }
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let present = 0, absent = 0, report = 0;
+            
+            Object.values(distributionStatus).forEach(status => {
+                if (status === 'present') present++;
+                else if (status === 'absent') absent++;
+                else if (status === 'report') report++;
+            });
+            
+            document.getElementById('presentCount').textContent = present;
+            document.getElementById('absentCount').textContent = absent;
+            document.getElementById('reportCount').textContent = report;
+        }
+
+        async function saveDistribution() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Enregistrement...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const values = [];
+                const dateISO = today.toISOString().split('T')[0];
+                
+                clients.forEach((client, index) => {
+                    const stat = distributionStatus[index];
+                    if (stat) {
+                        const row = [
+                            dateISO,
+                            client.fullName,
+                            stat === 'present' ? 'OUI' : 'NON',
+                            stat === 'report' ? 'OUI' : '',
+                            stat === 'report' ? 'Report' : ''
+                        ];
+                        values.push(row);
+                    }
+                });
+                
+                if (values.length === 0) {
+                    status.textContent = 'Aucune donnée à enregistrer';
+                    status.className = 'status error';
+                    return;
+                }
+                
+                // Ajouter les nouvelles lignes
+                await gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Distributions!A:E',
+                    valueInputOption: 'USER_ENTERED',
+                    resource: {
+                        values: values
+                    }
+                });
+                
+                status.textContent = `✓ Distribution enregistrée (${values.length} clients)`;
+                status.className = 'status success';
+                
+                // Réinitialiser après 3 secondes
+                setTimeout(() => {
+                    distributionStatus = {};
+                    displayClients();
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
