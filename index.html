@@ -10,7 +10,7 @@
         }
         
         .signout-btn-mobile:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(90, 144, 65, 0.5);
         }
         
         body {
@@ -28,7 +28,7 @@
             background-color: #5A9041;
             color: white;
             text-align: center;
-            padding: 10px;
+            padding: 12px 80px 12px 12px;
             font-size: 20px;
             font-weight: bold;
             position: sticky;
@@ -40,33 +40,63 @@
             justify-content: center;
         }
         
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .signout-btn-header {
+            background-color: rgba(90, 144, 65, 0.3);
+            border: 1px solid white;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        
+        .signout-btn-header:hover {
+            background-color: rgba(90, 144, 65, 0.5);
+        }
+        
         @media (min-width: 768px) {
             .app-header {
-                padding: 15px;
+                padding: 16px 120px 16px 16px;
                 font-size: 24px;
+            }
+            
+            .signout-btn-header {
+                right: 20px;
+                padding: 8px 16px;
+                font-size: 14px;
             }
         }
         
         /* Navigation */
         .nav-bar {
-            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
+            background: #90CF03;
             color: white;
             padding: 10px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             position: sticky;
-            top: 40px;
+            top: 54px;
             z-index: 100;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             border-top: 1px solid rgba(255,255,255,0.2);
         }
         
         @media (min-width: 768px) {
             .nav-bar {
-                top: 54px;
+                top: 74px;
                 position: sticky;
-                justify-content: space-between;
                 padding: 15px 20px;
             }
         }
@@ -75,6 +105,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            justify-content: center;
         }
         
         @media (min-width: 768px) {
@@ -93,6 +124,7 @@
             font-size: 20px;
             display: flex;
             align-items: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
         .nav-item.hamburger-nav {
@@ -107,41 +139,30 @@
         }
         
         .nav-item:hover {
-            background-color: rgba(144, 207, 3, 0.2);
+            background-color: rgba(90, 144, 65, 0.4);
         }
         
         .nav-item.active {
-            background-color: rgba(144, 207, 3, 0.3);
-            box-shadow: 0 0 0 1px rgba(144, 207, 3, 0.5);
+            background-color: rgba(90, 144, 65, 0.5);
+            box-shadow: 0 0 0 1px rgba(90, 144, 65, 0.8);
         }
         
         .nav-wrapper {
             display: flex;
             width: 100%;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
         
         @media (min-width: 768px) {
             .nav-wrapper {
-                justify-content: space-between;
                 max-width: 1200px;
                 margin: 0 auto;
             }
         }
         
-        .desktop-only {
-            display: none;
-        }
-        
-        @media (min-width: 768px) {
-            .desktop-only {
-                display: flex !important;
-            }
-        }
-        
         .signout-btn-mobile {
-            background-color: transparent;
+            background-color: rgba(90, 144, 65, 0.3);
             border: 1px solid white;
             color: white;
             padding: 6px 12px;
@@ -150,6 +171,7 @@
             cursor: pointer;
             position: absolute;
             right: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
         @media (min-width: 768px) {
@@ -217,18 +239,18 @@
         
         .app-header img,
         .header-logo {
-            height: 25px;
-            width: 25px;
-            margin-right: 8px;
+            height: 40px;
+            width: 64px;
+            margin-right: 10px;
             vertical-align: middle;
         }
         
         @media (max-width: 768px) {
             .app-header img,
             .header-logo {
-                height: 20px;
-                width: 20px;
-                margin-right: 5px;
+                height: 30px;
+                width: 48px;
+                margin-right: 8px;
             }
         }
         
@@ -258,17 +280,41 @@
             font-style: italic;
         }
         
+        .welcome-message {
+            color: #5A9041;
+            margin: 30px 0;
+            font-size: 24px;
+            animation: fadeIn 0.5s ease-in;
+            font-weight: 600;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-message {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-message {
+                font-size: 20px;
+            }
+        }
+        
         .app-version {
             color: rgba(255,255,255,0.7);
-            font-size: 12px;
+            font-size: 10px;
             font-weight: normal;
-            margin-left: 10px;
+            line-height: 1;
+        }
+        
+        .header-content > div {
+            text-align: left;
+            line-height: 1.2;
         }
         
         @media (max-width: 768px) {
             .app-version {
-                font-size: 10px;
-                margin-left: 5px;
+                font-size: 9px;
             }
         }
         
@@ -328,7 +374,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             touch-action: manipulation;
-            border: 1px solid rgba(90, 144, 65, 0.1);
+            border: 1px solid rgba(144, 207, 3, 0.3);
+            color: white;
         }
         
         @media (min-width: 768px) {
@@ -340,12 +387,13 @@
         .home-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            border-color: rgba(144, 207, 3, 0.3);
+            border-color: rgba(90, 144, 65, 0.5);
         }
         
         .home-card-icon {
             font-size: 36px;
             margin-bottom: 10px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
         }
         
         @media (min-width: 768px) {
@@ -358,7 +406,8 @@
         .home-card-title {
             font-size: 18px;
             font-weight: bold;
-            color: #5A9041;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         @media (min-width: 768px) {
@@ -367,10 +416,10 @@
             }
         }
         
-        .home-card.clients { background: linear-gradient(135deg, #e8f8d4 0%, #d4f0b5 100%); }
-        .home-card.paniers { background: linear-gradient(135deg, #f0fbe6 0%, #e1f5d0 100%); }
-        .home-card.distribution { background: linear-gradient(135deg, #fff5e6 0%, #ffe5cc 100%); }
-        .home-card.stats { background: linear-gradient(135deg, #f3f9e8 0%, #e8f3d6 100%); }
+        .home-card.clients { background: #90CF03; }
+        .home-card.paniers { background: #90CF03; }
+        .home-card.distribution { background: #90CF03; }
+        .home-card.stats { background: #90CF03; }
         
         /* Sections */
         .section {
@@ -1392,8 +1441,16 @@
 <body>
     <!-- App Header -->
     <div class="app-header hidden" id="appHeader">
-        <img src="logo ChampLibre.png" alt="ChampLibre" class="header-logo">
-        ChampLibre <span class="app-version">v3.0</span>
+        <div class="header-content">
+            <img src="logo ChampLibre.png" alt="ChampLibre" class="header-logo">
+            <div>
+                ChampLibre<br>
+                <span class="app-version">v3.0</span>
+            </div>
+        </div>
+        <button class="signout-btn-header" onclick="handleSignoutClick()">
+            Déconnexion
+        </button>
     </div>
     
     <!-- Navigation -->
@@ -1412,11 +1469,7 @@
                 <a class="nav-item" onclick="showSection('distribution')" title="Distribution">📦</a>
                 <a class="nav-item" onclick="showSection('stats')" title="Statistiques">📊</a>
             </div>
-            <a class="nav-item signout-nav desktop-only" onclick="handleSignoutClick()" title="Déconnexion">🚪</a>
         </div>
-        <button class="signout-btn-mobile" onclick="handleSignoutClick()">
-            Déconnexion
-        </button>
     </nav>
 
     <div class="main-container">
@@ -1432,6 +1485,19 @@
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
                     Se connecter avec Google
                 </button>
+                <div class="version-text">Version 3.0</div>
+            </div>
+        </div>
+        
+        <!-- Écran de bienvenue -->
+        <div id="welcomeScreen" class="login-screen hidden">
+            <div class="login-card">
+                <div class="login-logo">
+                    <img src="logo ChampLibre.png" alt="ChampLibre Logo">
+                </div>
+                <h1 class="login-title">ChampLibre</h1>
+                <p class="login-slogan">Laissez le champ libre à la collaboration</p>
+                <h2 id="welcomeMessage" class="welcome-message">Bonjour !</h2>
                 <div class="version-text">Version 3.0</div>
             </div>
         </div>
@@ -1648,7 +1714,7 @@
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
         // Feuille "Paniers": A=Date, B=Légume, C=Quantité, D=Producteur, E=Prix
         
-        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
         
         // Note sur la persistance de connexion :
         // L'app tente automatiquement de se reconnecter à chaque chargement de page
@@ -1702,8 +1768,8 @@
             // Mettre à jour le menu actif
             document.querySelectorAll('.nav-item').forEach((item, index) => {
                 item.classList.remove('active');
-                // Ne pas marquer le hamburger ou déconnexion comme actif
-                if (!item.classList.contains('hamburger-nav') && !item.classList.contains('signout-nav')) {
+                // Ne pas marquer le hamburger comme actif
+                if (!item.classList.contains('hamburger-nav')) {
                     const itemText = item.textContent.toLowerCase();
                     if ((sectionName === 'clients' && itemText.includes('👨‍👩‍👧‍👦')) ||
                         (sectionName === 'paniers' && itemText.includes('🥬')) ||
@@ -1883,21 +1949,58 @@
         }
         
         function showMainInterface() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
-            document.getElementById('appHeader').classList.remove('hidden');
-            document.getElementById('mainNav').classList.remove('hidden');
+            // D'abord afficher l'écran de bienvenue
+            showWelcomeScreen();
             
-            // Message de succès
-            const status = document.getElementById('status');
-            status.textContent = 'Connecté avec succès!';
-            status.className = 'status success';
-            status.classList.remove('hidden');
-            
-            // Masquer le message après 3 secondes
+            // Après 2 secondes, afficher l'interface principale
             setTimeout(() => {
-                status.classList.add('hidden');
-            }, 3000);
+                document.getElementById('welcomeScreen').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('appHeader').classList.remove('hidden');
+                document.getElementById('mainNav').classList.remove('hidden');
+                
+                // Message de succès
+                const status = document.getElementById('status');
+                status.textContent = 'Connecté avec succès!';
+                status.className = 'status success';
+                status.classList.remove('hidden');
+                
+                // Masquer le message après 3 secondes
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+            }, 2000);
+        }
+        
+        async function showWelcomeScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            
+            // Récupérer les infos de l'utilisateur connecté
+            try {
+                const response = await gapi.client.request({
+                    path: 'https://www.googleapis.com/oauth2/v1/userinfo',
+                    method: 'GET'
+                });
+                
+                const userEmail = response.result.email || '';
+                const userName = response.result.name || '';
+                let displayName = 'là';
+                
+                // Déterminer le prénom selon l'email ou le nom
+                const fullInfo = (userEmail + ' ' + userName).toLowerCase();
+                
+                if (fullInfo.includes('tibere') || fullInfo.includes('tibère')) {
+                    displayName = 'Tibère';
+                } else if (fullInfo.includes('sebastien') || fullInfo.includes('sébastien')) {
+                    displayName = 'Sébastien';
+                }
+                
+                document.getElementById('welcomeMessage').textContent = `Bonjour ${displayName} !`;
+            } catch (err) {
+                console.error('Erreur récupération infos utilisateur:', err);
+                document.getElementById('welcomeMessage').textContent = 'Bonjour !';
+            }
         }
 
         function handleSignoutClick() {
