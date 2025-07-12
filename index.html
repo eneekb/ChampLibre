@@ -1994,17 +1994,24 @@
                     method: 'GET'
                 });
                 
-                const userEmail = response.result.email || '';
                 const userName = response.result.name || '';
-                let displayName = 'là';
+                const userEmail = response.result.email || '';
+                let displayName = '';
                 
-                // Déterminer le prénom selon l'email ou le nom
-                const fullInfo = (userEmail + ' ' + userName).toLowerCase();
+                // Essayer d'extraire le prénom du nom complet
+                if (userName) {
+                    // Le prénom est généralement le premier mot du nom complet
+                    displayName = userName.split(' ')[0];
+                } else if (userEmail) {
+                    // Si pas de nom, utiliser la partie avant @ de l'email
+                    displayName = userEmail.split('@')[0];
+                    // Mettre la première lettre en majuscule
+                    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                }
                 
-                if (fullInfo.includes('tibere') || fullInfo.includes('tibère')) {
-                    displayName = 'Tibère';
-                } else if (fullInfo.includes('sebastien') || fullInfo.includes('sébastien')) {
-                    displayName = 'Sébastien';
+                // Si on n'a toujours pas de prénom, utiliser "là"
+                if (!displayName) {
+                    displayName = 'là';
                 }
                 
                 document.getElementById('welcomeMessage').textContent = `Bonjour ${displayName} !`;
@@ -2644,11 +2651,32 @@
                 });
                 
                 const values = response.result.values || [];
-                const weekData = values.filter(row => {
+                
+                // Debug : afficher les premières lignes et les semaines uniques
+                console.log('Données brutes (5 premières lignes):', values.slice(0, 5));
+                console.log('Semaine recherchée:', selectedWeek);
+                
+                // Afficher toutes les semaines uniques trouvées
+                const uniqueWeeks = [...new Set(values.map(row => row[1]).filter(Boolean))];
+                console.log('Semaines disponibles dans le sheet:', uniqueWeeks);
+                
+                // Si pas de correspondance exacte, essayer de trouver par la date
+                let weekData = values.filter(row => {
                     if (!row[0]) return false;
                     const rowWeek = row[1]; // Colonne Semaine
                     return rowWeek === selectedWeek;
                 });
+                
+                // Si aucune donnée trouvée avec le format de semaine, afficher toutes les données
+                if (weekData.length === 0 && values.length > 0) {
+                    console.log('Aucune correspondance trouvée. Format attendu:', selectedWeek);
+                    console.log('Formats trouvés:', uniqueWeeks);
+                    
+                    // Optionnel : afficher les données de la première semaine disponible
+                    // weekData = values.filter(row => row[1] === uniqueWeeks[0]);
+                }
+                
+                console.log('Données filtrées:', weekData.length, 'lignes');
                 
                 displayWeekComposition(weekData);
                 
@@ -2659,6 +2687,7 @@
                 status.textContent = 'Erreur: ' + err.message;
                 status.className = 'status error';
                 status.classList.remove('hidden');
+                console.error('Erreur complète:', err);
             }
         }
         
@@ -2671,7 +2700,11 @@
             let totalPrincipal = 0;
             
             if (data.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Aucune composition pour cette semaine</div>';
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">
+                        Aucune composition pour cette semaine<br>
+                        <small>Vérifiez que le format de la semaine dans le sheet correspond</small>
+                    </div>`;
                 updateSummary(0, 0, 0);
                 return;
             }
