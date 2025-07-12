@@ -7,6 +7,10 @@
     <style>
         * {
             box-sizing: border-box;
+        @media (max-width: 480px) {
+            .vegetable-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         .signout-btn-mobile:hover {
@@ -1223,218 +1227,239 @@
         }
         
         /* =============== STYLES PANIERS =============== */
-        .paniers-controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        .date-selector {
+        .week-selector {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            background: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            margin-bottom: 20px;
         }
         
-        .date-input {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        
-        .date-input:focus {
-            border-color: #5A9041;
-            box-shadow: 0 0 0 3px rgba(144, 207, 3, 0.1);
-        }
-        
-        .load-btn, .save-btn {
-            padding: 8px 16px;
+        .week-nav-btn {
+            background: #5A9041;
+            color: white;
             border: none;
             border-radius: 5px;
+            padding: 8px 12px;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
-            font-weight: 500;
+            min-width: 40px;
         }
         
-        .load-btn {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-            color: white;
-        }
-        
-        .load-btn:hover {
-            background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+        .week-nav-btn:hover {
+            background: #4A7A35;
             transform: translateY(-1px);
         }
         
-        .save-btn {
-            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
-            color: white;
-            box-shadow: 0 2px 4px rgba(90, 144, 65, 0.3);
+        .week-select {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            min-width: 200px;
+            cursor: pointer;
+            background: white;
         }
         
-        .save-btn:hover {
-            background: linear-gradient(135deg, #4A7A35 0%, #3A6A25 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(90, 144, 65, 0.4);
+        .week-select:focus {
+            outline: none;
+            border-color: #5A9041;
+            box-shadow: 0 0 0 3px rgba(90, 144, 65, 0.1);
         }
         
-        .composition-area {
-            display: grid;
-            gap: 20px;
-            margin-top: 20px;
+        .basket-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(90, 144, 65, 0.1);
         }
         
-        .add-item-btn {
+        .summary-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-total h3 {
+            margin: 0 0 10px 0;
+            color: #5A9041;
+            font-size: 18px;
+        }
+        
+        .total-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #5A9041;
+        }
+        
+        .summary-chart {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            padding: 5px;
+        }
+        
+        #repartitionChart {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .edit-basket-btn {
             background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
             border-radius: 5px;
+            padding: 10px 24px;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            width: 100%;
         }
         
-        .add-item-btn:hover {
+        .edit-basket-btn:hover {
             background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
             box-shadow: 0 4px 6px rgba(255, 119, 0, 0.4);
         }
         
-        .panier-items {
+        .vegetable-cards {
             display: grid;
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
         }
         
-        .panier-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
-            gap: 10px;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-        
-        @media (max-width: 768px) {
-            .panier-item {
-                grid-template-columns: 1fr;
-                gap: 8px;
+        @media (min-width: 768px) {
+            .vegetable-cards {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
             }
         }
         
-        .panier-item:hover {
-            background: #f0f1f2;
-            border-color: #90CF03;
-        }
-        
-        .panier-item input,
-        .panier-item select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        
-        .panier-item input:focus,
-        .panier-item select:focus {
-            border-color: #5A9041;
-            box-shadow: 0 0 0 3px rgba(144, 207, 3, 0.1);
-        }
-        
-        .remove-item-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+        .vegetable-card {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
             cursor: pointer;
+            background: white;
+        }
+        
+        .vegetable-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .vegetable-card.tibere:hover {
+            box-shadow: 0 4px 12px rgba(90, 144, 65, 0.3);
+        }
+        
+        .vegetable-card.principal:hover {
+            box-shadow: 0 4px 12px rgba(255, 119, 0, 0.3);
+        }
+        
+        .vegetable-card.tibere {
+            border: 2px solid #5A9041;
+            border-left: 5px solid #5A9041;
+        }
+        
+        .vegetable-card.principal {
+            border: 2px solid #FF7700;
+            border-left: 5px solid #FF7700;
+        }
+        
+        .vegetable-card.tibere .vegetable-price {
+            color: #5A9041;
+        }
+        
+        .vegetable-card.principal .vegetable-price {
+            color: #FF7700;
+        }
+        
+        .vegetable-name {
+            font-weight: 600;
             font-size: 14px;
-            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            color: #333;
         }
         
-        .remove-item-btn:hover {
-            background: #c82333;
-            transform: translateY(-1px);
-        }
-        
-        .totals-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 8px;
-            border: 1px solid rgba(90, 144, 65, 0.2);
-        }
-        
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            font-size: 16px;
-        }
-        
-        .total-row.grand-total {
-            font-size: 20px;
-            font-weight: bold;
-            color: #5A9041;
-            border-top: 2px solid #ddd;
-            margin-top: 10px;
-            padding-top: 15px;
-        }
-        
-        .producer-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
+        .vegetable-details {
             font-size: 12px;
-            font-weight: 500;
-            margin-left: 5px;
+            opacity: 0.8;
+            color: #666;
         }
         
-        .producer-badge.main {
-            background: #e8f8d4;
-            color: #5A9041;
-            border: 1px solid #90CF03;
-        }
-        
-        .producer-badge.tibere {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffc107;
+        .vegetable-price {
+            font-weight: bold;
+            margin-top: 4px;
+            font-size: 14px;
         }
         
         @media (max-width: 768px) {
-            .paniers-controls {
+            .week-selector {
+                flex-wrap: wrap;
+            }
+            
+            .week-select {
+                min-width: 150px;
+                font-size: 14px;
+            }
+            
+            .week-nav-btn {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+            
+            .basket-summary {
+                padding: 15px;
+            }
+            
+            .summary-content {
                 flex-direction: column;
-                align-items: stretch;
+                text-align: center;
             }
             
-            .date-selector {
-                justify-content: center;
+            .summary-total h3 {
+                font-size: 16px;
             }
             
-            .panier-item input,
-            .panier-item select {
-                width: 100%;
+            .total-amount {
+                font-size: 24px;
             }
+            
+            .summary-chart {
+                margin-top: 15px;
+            }
+            
+            .vegetable-cards {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+            
+        @media (max-width: 768px) {
+            .vegetable-card {
+                padding: 8px;
+            }
+            
+            .vegetable-name {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+            
+            .vegetable-details {
+                font-size: 10px;
+            }
+            
+            .vegetable-price {
+                font-size: 12px;
+                margin-top: 2px;
+            }
+        }
         }
     </style>
 </head>
@@ -1465,7 +1490,7 @@
                     </div>
                 </a>
                 <a class="nav-item" onclick="showSection('clients')" title="Clients">👨‍👩‍👧‍👦</a>
-                <a class="nav-item" onclick="showSection('paniers')" title="Composition">🥬</a>
+                <a class="nav-item" onclick="showSection('paniers')" title="Composition">🥕</a>
                 <a class="nav-item" onclick="showSection('distribution')" title="Distribution">📦</a>
                 <a class="nav-item" onclick="showSection('stats')" title="Statistiques">📊</a>
             </div>
@@ -1515,7 +1540,7 @@
                     </div>
                     
                     <div class="home-card paniers" onclick="showSection('paniers')">
-                        <div class="home-card-icon">🥬</div>
+                        <div class="home-card-icon">🥕</div>
                         <div class="home-card-title">Composition</div>
                     </div>
                     
@@ -1626,42 +1651,37 @@
             <!-- Section Paniers -->
             <div id="paniers" class="section">
                 <div class="section-header">
-                    <h1 class="section-title">🥬 Composition des Paniers</h1>
+                    <h1 class="section-title">🥕 Composition des Paniers</h1>
                 </div>
                 
-                <div class="paniers-controls">
-                    <div class="date-selector">
-                        <label for="panierDate">📅 Date du panier :</label>
-                        <input type="date" id="panierDate" class="date-input">
-                        <button class="load-btn" onclick="loadPanierData()">📥 Charger</button>
-                    </div>
-                    <button class="save-btn" onclick="savePanier()">💾 Enregistrer</button>
-                </div>
-                
-                <div class="composition-area">
-                    <button class="add-item-btn" onclick="addPanierItem()">
-                        <span>➕</span>
-                        <span>Ajouter un légume</span>
-                    </button>
-                    
-                    <div id="panierItems" class="panier-items">
+                <!-- Sélecteur de semaine -->
+                <div class="week-selector">
+                    <button class="week-nav-btn" onclick="previousWeek()">◀</button>
+                    <select id="weekSelect" class="week-select" onchange="loadWeekData()">
                         <!-- Sera rempli dynamiquement -->
+                    </select>
+                    <button class="week-nav-btn" onclick="nextWeek()">▶</button>
+                </div>
+                
+                <!-- Résumé du panier -->
+                <div class="basket-summary">
+                    <div class="summary-content">
+                        <div class="summary-total">
+                            <h3>Total du panier</h3>
+                            <div class="total-amount" id="basketTotal">0.00 €</div>
+                        </div>
+                        <div class="summary-chart">
+                            <canvas id="repartitionChart" width="100" height="100"></canvas>
+                        </div>
                     </div>
-                    
-                    <div class="totals-section">
-                        <div class="total-row">
-                            <span>Total Principal <span class="producer-badge main">Vous</span></span>
-                            <span id="totalMain">0.00 €</span>
-                        </div>
-                        <div class="total-row">
-                            <span>Total Tibère <span class="producer-badge tibere">Tibère</span></span>
-                            <span id="totalTibere">0.00 €</span>
-                        </div>
-                        <div class="total-row grand-total">
-                            <span>Total du panier</span>
-                            <span id="totalGrand">0.00 €</span>
-                        </div>
-                    </div>
+                    <button class="edit-basket-btn" onclick="editBasket()">
+                        ✏️ Modifier
+                    </button>
+                </div>
+                
+                <!-- Cartes de légumes -->
+                <div id="vegetableCards" class="vegetable-cards">
+                    <!-- Sera rempli dynamiquement -->
                 </div>
             </div>
 
@@ -1712,7 +1732,7 @@
         // Structure du Google Sheet:
         // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
-        // Feuille "Paniers": A=Date, B=Légume, C=Quantité, D=Producteur, E=Prix
+        // Feuille "Paniers": A=Date, B=Semaine, C=Légume, D=Producteur, E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
         
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
         
@@ -1731,19 +1751,12 @@
         let clientFilter = 'all';
         let hasTriedAutoConnect = false; // Pour éviter les boucles infinies
         let panierItems = []; // Pour stocker les items du panier en cours
+        let currentWeek = ''; // Pour stocker la semaine courante
         
         // Date du jour
         const today = new Date();
         const dateStr = today.toLocaleDateString('fr-FR');
         document.getElementById('dateInfo').textContent = dateStr;
-        
-        // Définir la date par défaut pour les paniers
-        document.addEventListener('DOMContentLoaded', function() {
-            const panierDateInput = document.getElementById('panierDate');
-            if (panierDateInput) {
-                panierDateInput.value = today.toISOString().split('T')[0];
-            }
-        });
 
         // Navigation
         function showSection(sectionName) {
@@ -1772,7 +1785,7 @@
                 if (!item.classList.contains('hamburger-nav')) {
                     const itemText = item.textContent.toLowerCase();
                     if ((sectionName === 'clients' && itemText.includes('👨‍👩‍👧‍👦')) ||
-                        (sectionName === 'paniers' && itemText.includes('🥬')) ||
+                        (sectionName === 'paniers' && itemText.includes('🥕')) ||
                         (sectionName === 'distribution' && itemText.includes('📦')) ||
                         (sectionName === 'stats' && itemText.includes('📊'))) {
                         item.classList.add('active');
@@ -1788,10 +1801,8 @@
             } else if (sectionName === 'clients' && gapi.client.getToken() !== null) {
                 loadAllClients();
             } else if (sectionName === 'paniers' && gapi.client.getToken() !== null) {
-                // Initialiser avec un item vide
-                if (panierItems.length === 0) {
-                    addPanierItem();
-                }
+                // Initialiser le sélecteur de semaines
+                initWeekSelector();
             }
         }
 
@@ -1969,7 +1980,7 @@
                 setTimeout(() => {
                     status.classList.add('hidden');
                 }, 3000);
-            }, 2000);
+            }, 3000);
         }
         
         async function showWelcomeScreen() {
@@ -2534,128 +2545,114 @@
         
         // ========== FONCTIONS PANIERS ==========
         
-        // Ajouter un item au panier
-        function addPanierItem(legume = '', quantite = '', producteur = 'Principal', prix = '') {
-            const itemId = Date.now();
-            panierItems.push({
-                id: itemId,
-                legume: legume,
-                quantite: quantite,
-                producteur: producteur,
-                prix: prix
+        // Obtenir le numéro de semaine d'une date
+        function getWeekNumber(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getFullYear()}-S${weekNo.toString().padStart(2, '0')}`;
+        }
+        
+        // Obtenir les dates de début et fin d'une semaine
+        function getWeekDates(weekString) {
+            const [year, week] = weekString.split('-S');
+            const weekNum = parseInt(week);
+            const date = new Date(year, 0, 1 + (weekNum - 1) * 7);
+            const dayOfWeek = date.getDay();
+            const monday = new Date(date);
+            monday.setDate(date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            return { start: monday, end: sunday };
+        }
+        
+        // Initialiser le sélecteur de semaines
+        async function initWeekSelector() {
+            const select = document.getElementById('weekSelect');
+            select.innerHTML = '';
+            
+            // Générer les 12 dernières semaines
+            const weeks = [];
+            const currentDate = new Date();
+            
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(currentDate);
+                date.setDate(date.getDate() - (i * 7));
+                const weekNum = getWeekNumber(date);
+                const weekDates = getWeekDates(weekNum);
+                
+                weeks.push({
+                    value: weekNum,
+                    label: `Semaine du ${weekDates.start.toLocaleDateString('fr-FR')} au ${weekDates.end.toLocaleDateString('fr-FR')}`
+                });
+            }
+            
+            // Ajouter les options (plus récentes en haut)
+            weeks.forEach(week => {
+                const option = document.createElement('option');
+                option.value = week.value;
+                option.textContent = week.label;
+                select.appendChild(option);
             });
             
-            renderPanierItems();
-        }
-        
-        // Retirer un item du panier
-        function removePanierItem(itemId) {
-            panierItems = panierItems.filter(item => item.id !== itemId);
-            renderPanierItems();
-        }
-        
-        // Afficher les items du panier
-        function renderPanierItems() {
-            const container = document.getElementById('panierItems');
-            container.innerHTML = '';
+            // Sélectionner la semaine courante
+            currentWeek = getWeekNumber(new Date());
+            select.value = currentWeek;
             
-            panierItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'panier-item';
-                
-                div.innerHTML = `
-                    <input type="text" placeholder="Légume" value="${item.legume}" 
-                           onchange="updatePanierItem(${item.id}, 'legume', this.value)">
-                    <input type="text" placeholder="Quantité" value="${item.quantite}" 
-                           onchange="updatePanierItem(${item.id}, 'quantite', this.value)">
-                    <select onchange="updatePanierItem(${item.id}, 'producteur', this.value)">
-                        <option value="Principal" ${item.producteur === 'Principal' ? 'selected' : ''}>Vous</option>
-                        <option value="Tibère" ${item.producteur === 'Tibère' ? 'selected' : ''}>Tibère</option>
-                    </select>
-                    <input type="number" placeholder="Prix" value="${item.prix}" step="0.01"
-                           onchange="updatePanierItem(${item.id}, 'prix', this.value)">
-                    <button class="remove-item-btn" onclick="removePanierItem(${item.id})">✕</button>
-                `;
-                
-                container.appendChild(div);
-            });
-            
-            updateTotals();
-        }
-        
-        // Mettre à jour un item
-        function updatePanierItem(itemId, field, value) {
-            const item = panierItems.find(i => i.id === itemId);
-            if (item) {
-                item[field] = value;
-                updateTotals();
+            // Si connecté, charger les données
+            if (gapi.client.getToken() !== null) {
+                await loadWeekData();
             }
         }
         
-        // Calculer les totaux
-        function updateTotals() {
-            let totalMain = 0;
-            let totalTibere = 0;
-            
-            panierItems.forEach(item => {
-                const prix = parseFloat(item.prix) || 0;
-                if (item.producteur === 'Principal') {
-                    totalMain += prix;
-                } else {
-                    totalTibere += prix;
-                }
-            });
-            
-            document.getElementById('totalMain').textContent = totalMain.toFixed(2) + ' €';
-            document.getElementById('totalTibere').textContent = totalTibere.toFixed(2) + ' €';
-            document.getElementById('totalGrand').textContent = (totalMain + totalTibere).toFixed(2) + ' €';
+        // Navigation semaine précédente
+        function previousWeek() {
+            const select = document.getElementById('weekSelect');
+            const currentIndex = select.selectedIndex;
+            if (currentIndex < select.options.length - 1) {
+                select.selectedIndex = currentIndex + 1;
+                loadWeekData();
+            }
         }
         
-        // Charger les données d'un panier existant
-        async function loadPanierData() {
-            const date = document.getElementById('panierDate').value;
-            if (!date) {
-                alert('Veuillez sélectionner une date');
-                return;
+        // Navigation semaine suivante
+        function nextWeek() {
+            const select = document.getElementById('weekSelect');
+            const currentIndex = select.selectedIndex;
+            if (currentIndex > 0) {
+                select.selectedIndex = currentIndex - 1;
+                loadWeekData();
             }
+        }
+        
+        // Charger les données d'une semaine
+        async function loadWeekData() {
+            const selectedWeek = document.getElementById('weekSelect').value;
+            currentWeek = selectedWeek;
             
             try {
                 const status = document.getElementById('status');
-                status.textContent = 'Chargement du panier...';
+                status.textContent = 'Chargement de la composition...';
                 status.className = 'status loading';
                 status.classList.remove('hidden');
                 
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Paniers!A2:E1000',
+                    range: 'Paniers!A2:H1000',
                 });
                 
                 const values = response.result.values || [];
-                panierItems = [];
-                
-                values.forEach(row => {
-                    if (row[0] === date) {
-                        addPanierItem(
-                            row[1] || '',
-                            row[2] || '',
-                            row[3] || 'Principal',
-                            row[4] || ''
-                        );
-                    }
+                const weekData = values.filter(row => {
+                    if (!row[0]) return false;
+                    const rowWeek = row[1]; // Colonne Semaine
+                    return rowWeek === selectedWeek;
                 });
                 
-                if (panierItems.length === 0) {
-                    status.textContent = 'Aucun panier trouvé pour cette date';
-                    status.className = 'status error';
-                    addPanierItem(); // Ajouter un item vide
-                } else {
-                    status.textContent = `Panier chargé (${panierItems.length} items)`;
-                    status.className = 'status success';
-                }
+                displayWeekComposition(weekData);
                 
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
+                status.classList.add('hidden');
                 
             } catch (err) {
                 const status = document.getElementById('status');
@@ -2665,89 +2662,97 @@
             }
         }
         
-        // Sauvegarder le panier
-        async function savePanier() {
-            const date = document.getElementById('panierDate').value;
-            if (!date) {
-                alert('Veuillez sélectionner une date');
+        // Afficher la composition de la semaine
+        function displayWeekComposition(data) {
+            const container = document.getElementById('vegetableCards');
+            container.innerHTML = '';
+            
+            let totalTibere = 0;
+            let totalPrincipal = 0;
+            
+            if (data.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Aucune composition pour cette semaine</div>';
+                updateSummary(0, 0, 0);
                 return;
             }
             
-            // Filtrer les items vides
-            const validItems = panierItems.filter(item => 
-                item.legume && item.quantite && item.prix
-            );
-            
-            if (validItems.length === 0) {
-                alert('Veuillez remplir au moins un item complet');
-                return;
-            }
-            
-            try {
-                const status = document.getElementById('status');
-                status.textContent = 'Enregistrement du panier...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+            // Créer les cartes de légumes
+            data.forEach(row => {
+                const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal] = row;
+                const price = parseFloat(prixTotal) || 0;
                 
-                // D'abord, charger toutes les données existantes
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Paniers!A2:E1000',
-                });
+                const card = document.createElement('div');
+                card.className = `vegetable-card ${producteur && producteur.toLowerCase() === 'tibère' ? 'tibere' : 'principal'}`;
                 
-                const existingValues = response.result.values || [];
+                card.innerHTML = `
+                    <div class="vegetable-name">${legume || 'Légume'}</div>
+                    <div class="vegetable-details">${quantite || ''} ${unite || ''}</div>
+                    <div class="vegetable-price">${price.toFixed(2)} €</div>
+                `;
                 
-                // Filtrer les lignes qui ne correspondent pas à la date actuelle
-                const filteredValues = existingValues.filter(row => row[0] !== date);
+                container.appendChild(card);
                 
-                // Ajouter les nouveaux items
-                validItems.forEach(item => {
-                    filteredValues.push([
-                        date,
-                        item.legume,
-                        item.quantite,
-                        item.producteur,
-                        item.prix
-                    ]);
-                });
-                
-                // Trier par date
-                filteredValues.sort((a, b) => {
-                    const dateA = new Date(a[0]);
-                    const dateB = new Date(b[0]);
-                    return dateA - dateB;
-                });
-                
-                // Effacer et réécrire toutes les données
-                await gapi.client.sheets.spreadsheets.values.clear({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Paniers!A2:E1000',
-                });
-                
-                if (filteredValues.length > 0) {
-                    await gapi.client.sheets.spreadsheets.values.update({
-                        spreadsheetId: SPREADSHEET_ID,
-                        range: 'Paniers!A2:E' + (filteredValues.length + 1),
-                        valueInputOption: 'USER_ENTERED',
-                        resource: {
-                            values: filteredValues
-                        }
-                    });
+                // Calculer les totaux
+                if (producteur && producteur.toLowerCase() === 'tibère') {
+                    totalTibere += price;
+                } else {
+                    totalPrincipal += price;
                 }
-                
-                status.textContent = `✓ Panier enregistré (${validItems.length} items)`;
-                status.className = 'status success';
-                
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
-                
-            } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+            });
+            
+            updateSummary(totalTibere, totalPrincipal, data.length);
+        }
+        
+        // Mettre à jour le résumé
+        function updateSummary(totalTibere, totalPrincipal, itemCount) {
+            const total = totalTibere + totalPrincipal;
+            const totalElement = document.getElementById('basketTotal');
+            if (totalElement) {
+                totalElement.textContent = total.toFixed(2) + ' €';
             }
+            
+            // Dessiner le camembert
+            const canvas = document.getElementById('repartitionChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 40;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (total > 0) {
+                // Portion Tibère
+                const tibereAngle = (totalTibere / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + tibereAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#5A9041';
+                ctx.fill();
+                
+                // Portion Principal
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, -Math.PI/2 + tibereAngle, -Math.PI/2 + 2*Math.PI);
+                ctx.closePath();
+                ctx.fillStyle = '#FF7700';
+                ctx.fill();
+                
+                // Bordure
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.strokeStyle = '#ddd';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+        
+        // Passer en mode édition
+        function editBasket() {
+            alert('Fonction d\'édition à implémenter');
+            // TODO: Implémenter la transition vers le mode édition
         }
     </script>
 </body>
