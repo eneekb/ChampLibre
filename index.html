@@ -9,61 +9,21 @@
             box-sizing: border-box;
         .signout-btn-mobile:hover {
             background-color: rgba(255, 255, 255, 0.1);
-        /* Version badge */
-        .version-badge {
-            font-size: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 10px;
-            font-weight: normal;
-            vertical-align: middle;
-        /* Logo ChampLibre */
-        .app-logo {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        
-        @media (min-width: 768px) {
-            .app-logo {
-                width: 50px;
-                height: 50px;
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .version-badge {
-                font-size: 14px;
-            }
-        }
-        
-        .login-version {
-            font-size: 16px;
-            opacity: 0.6;
-            font-weight: normal;
-            margin-left: 10px;
-        }
-        
-        @media (min-width: 768px) {
-            .login-version {
-                font-size: 18px;
-            }
         }
         
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
         }
         
         /* App Header */
         .app-header {
-            background: linear-gradient(135deg, #5A9041 0%, #6BA54A 100%);
+            background: linear-gradient(135deg, #5A9041 0%, #6BA04D 100%);
             color: white;
             text-align: center;
             padding: 10px;
@@ -72,7 +32,7 @@
             position: sticky;
             top: 0;
             z-index: 101;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         @media (min-width: 768px) {
@@ -84,7 +44,7 @@
         
         /* Navigation */
         .nav-bar {
-            background: linear-gradient(135deg, #5A9041 0%, #6BA54A 100%);
+            background-color: #5A9041;
             color: white;
             padding: 10px;
             display: flex;
@@ -94,7 +54,7 @@
             top: 40px;
             z-index: 100;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-top: 1px solid rgba(144, 207, 3, 0.3);
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
         
         @media (min-width: 768px) {
@@ -147,11 +107,11 @@
         }
         
         .nav-item:hover {
-            background-color: rgba(144, 207, 3, 0.2);
+            background-color: rgba(255, 255, 255, 0.2);
         }
         
         .nav-item.active {
-            background-color: rgba(144, 207, 3, 0.3);
+            background-color: rgba(255, 255, 255, 0.3);
         }
         
         .nav-item.signout-nav {
@@ -208,11 +168,29 @@
         .login-card {
             background: white;
             padding: 40px 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(90, 144, 65, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 90%;
-            border-top: 5px solid #90CF03;
+            border: 2px solid #90CF03;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(144,207,3,0.05) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
         
         @media (min-width: 768px) {
@@ -225,12 +203,17 @@
         .login-logo {
             font-size: 72px;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
         
         .login-title {
             font-size: 24px;
             color: #5A9041;
             margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
         }
         
         @media (min-width: 768px) {
@@ -244,6 +227,8 @@
             font-style: italic;
             margin-bottom: 40px;
             font-size: 14px;
+            position: relative;
+            z-index: 1;
         }
         
         @media (min-width: 768px) {
@@ -253,29 +238,27 @@
         }
         
         .login-btn {
-            background: linear-gradient(135deg, #90CF03 0%, #A5D820 100%);
-            color: #333;
+            background-color: #90CF03;
+            color: white;
             border: none;
             padding: 15px 40px;
             font-size: 18px;
-            border-radius: 30px;
+            border-radius: 5px;
             cursor: pointer;
             width: 100%;
             font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(144, 207, 3, 0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .login-btn:hover {
-            background: linear-gradient(135deg, #7AB502 0%, #90CF03 100%);
-            box-shadow: 0 6px 20px rgba(144, 207, 3, 0.4);
-            transform: translateY(-2px);
+            background-color: #7AB902;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
         
         .login-btn:disabled {
             background-color: #6c757d;
             cursor: not-allowed;
-            box-shadow: none;
         }
         
         /* Page d'accueil */
@@ -303,7 +286,6 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             touch-action: manipulation;
-            border: 2px solid transparent;
         }
         
         @media (min-width: 768px) {
@@ -315,7 +297,6 @@
         .home-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            border-color: #90CF03;
         }
         
         .home-card-icon {
@@ -343,29 +324,44 @@
         }
         
         .home-card.clients { 
-            background: linear-gradient(135deg, #f0f6ed 0%, #e1edda 100%); 
+            background: linear-gradient(135deg, #e8f3ff 0%, #d0e4ff 100%); 
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
         .home-card.paniers { 
-            background: linear-gradient(135deg, #ecf8ec 0%, #d4f0d4 100%); 
+            background: linear-gradient(135deg, #e8f8e0 0%, #d4f0c4 100%); 
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
         .home-card.distribution { 
-            background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 100%); 
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); 
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
         .home-card.stats { 
-            background: linear-gradient(135deg, #f5f9f2 0%, #e8f2e1 100%); 
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); 
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
+        
+        .home-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .home-card.clients:hover { border-color: #5A9041; }
+        .home-card.paniers:hover { border-color: #90CF03; }
+        .home-card.distribution:hover { border-color: #FF7700; }
+        .home-card.stats:hover { border-color: #9c27b0; }
         
         /* Sections */
         .section {
             display: none;
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         @media (min-width: 768px) {
@@ -411,8 +407,9 @@
         }
         
         .status.success {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #e8f8e0;
+            color: #3d6f2a;
+            border: 1px solid #90CF03;
         }
         
         .status.error {
@@ -456,7 +453,7 @@
         }
         
         .client-item.present {
-            background: #d4edda;
+            background: #e8f8e0;
             border-color: #90CF03;
         }
         
@@ -514,12 +511,12 @@
         
         .action-btn.present {
             border-color: #90CF03;
-            color: #90CF03;
+            color: #5A9041;
         }
         
         .action-btn.present.active {
             background: #90CF03;
-            color: #333;
+            color: white;
         }
         
         .action-btn.absent {
@@ -553,21 +550,17 @@
         .save-distribution-btn {
             width: 100%;
             margin-top: 20px;
-            background: linear-gradient(135deg, #5A9041 0%, #6BA54A 100%);
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 18px;
             padding: 15px;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(90, 144, 65, 0.3);
         }
         
         .save-distribution-btn:hover {
-            background: linear-gradient(135deg, #4A7F35 0%, #5A9041 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(90, 144, 65, 0.4);
+            background-color: #0056b3;
         }
         
         .hidden {
@@ -642,12 +635,13 @@
         
         .search-input:focus {
             border-color: #5A9041;
+            box-shadow: 0 0 0 3px rgba(90, 144, 65, 0.1);
         }
         
         .add-client-btn-small {
             padding: 8px 14px;
-            background: linear-gradient(135deg, #90CF03 0%, #A5D820 100%);
-            color: #333;
+            background: #FF7700;
+            color: white;
             border: none;
             border-radius: 5px;
             font-size: 20px;
@@ -655,13 +649,13 @@
             cursor: pointer;
             transition: all 0.2s;
             min-width: 40px;
-            box-shadow: 0 2px 8px rgba(144, 207, 3, 0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .add-client-btn-small:hover {
-            background: linear-gradient(135deg, #7AB502 0%, #90CF03 100%);
+            background: #E56600;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(144, 207, 3, 0.4);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
         
         .filter-buttons {
@@ -823,6 +817,7 @@
         .form-group textarea:focus {
             outline: none;
             border-color: #5A9041;
+            box-shadow: 0 0 0 3px rgba(90, 144, 65, 0.1);
         }
         
         .checkbox-label {
@@ -862,15 +857,12 @@
         }
         
         .submit-btn {
-            background: linear-gradient(135deg, #5A9041 0%, #6BA54A 100%);
+            background: #007bff;
             color: white;
-            box-shadow: 0 2px 8px rgba(90, 144, 65, 0.3);
         }
         
         .submit-btn:hover {
-            background: linear-gradient(135deg, #4A7F35 0%, #5A9041 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(90, 144, 65, 0.4);
+            background: #0056b3;
         }
         
         /* Panneau de détails */
@@ -957,7 +949,7 @@
         }
         
         .client-solde.positive {
-            color: #28a745;
+            color: #5A9041;
         }
         
         .client-solde.negative {
@@ -965,7 +957,7 @@
         }
         
         .edit-client-btn {
-            background: linear-gradient(135deg, #FF7700 0%, #FF8820 100%);
+            background: #FF7700;
             color: white;
             border: none;
             border-radius: 5px;
@@ -973,17 +965,17 @@
             padding: 10px 20px;
             font-size: 16px;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(255, 119, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .edit-client-btn:hover {
-            background: linear-gradient(135deg, #E56A00 0%, #FF7700 100%);
+            background: #E56600;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 119, 0, 0.4);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
         
         a.call-btn, button.call-btn {
-            background: linear-gradient(135deg, #FF7700 0%, #FF8820 100%);
+            background: #FF7700;
             color: white;
             border: none;
             border-radius: 5px;
@@ -1000,18 +992,18 @@
             min-height: 44px;
             line-height: 28px;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(255, 119, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         a.call-btn:hover, button.call-btn:hover {
-            background: linear-gradient(135deg, #E56A00 0%, #FF7700 100%);
+            background: #E56600;
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(255, 119, 0, 0.4);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
         }
         
         a.call-btn:active, button.call-btn:active {
-            background: #CC5F00;
+            background: #CC5500;
             transform: translateY(0);
         }
         
@@ -1029,7 +1021,7 @@
 <body>
     <!-- App Header -->
     <div class="app-header hidden" id="appHeader">
-        🥬 ChampLibre <span class="version-badge">V2.0</span>
+        🥬 ChampLibre
     </div>
     
     <!-- Navigation -->
@@ -1058,10 +1050,10 @@
         <div id="loginScreen" class="login-screen">
             <div class="login-card">
                 <div class="login-logo">🥬</div>
-                <h1 class="login-title">ChampLibre <span class="login-version">V2.0</span></h1>
+                <h1 class="login-title">ChampLibre</h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
-                <div id="loginStatus" class="status hidden" style="margin-bottom: 20px;"></div>
-                <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
+                <div id="loginStatus" class="status hidden" style="margin-bottom: 20px; position: relative; z-index: 1;"></div>
+                <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled style="position: relative; z-index: 1;">
                     Se connecter avec Google
                 </button>
             </div>
@@ -1238,7 +1230,6 @@
 
     <script>
         // Configuration
-        const APP_VERSION = 'V2.0'; // Version de l'application
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
         const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
