@@ -9,6 +9,15 @@
             box-sizing: border-box;
         .signout-btn-mobile:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        /* Version badge */
+        .version-badge {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            font-weight: normal;
+            vertical-align: middle;
         /* Logo ChampLibre */
         .app-logo {
             width: 40px;
@@ -21,6 +30,25 @@
             .app-logo {
                 width: 50px;
                 height: 50px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .version-badge {
+                font-size: 14px;
+            }
+        }
+        
+        .login-version {
+            font-size: 16px;
+            opacity: 0.6;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .login-version {
+                font-size: 18px;
             }
         }
         
@@ -1001,7 +1029,7 @@
 <body>
     <!-- App Header -->
     <div class="app-header hidden" id="appHeader">
-        🥬 ChampLibre
+        🥬 ChampLibre <span class="version-badge">V2.0</span>
     </div>
     
     <!-- Navigation -->
@@ -1030,7 +1058,7 @@
         <div id="loginScreen" class="login-screen">
             <div class="login-card">
                 <div class="login-logo">🥬</div>
-                <h1 class="login-title">ChampLibre</h1>
+                <h1 class="login-title">ChampLibre <span class="login-version">V2.0</span></h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
                 <div id="loginStatus" class="status hidden" style="margin-bottom: 20px;"></div>
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
@@ -1210,6 +1238,7 @@
 
     <script>
         // Configuration
+        const APP_VERSION = 'V2.0'; // Version de l'application
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
         const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
