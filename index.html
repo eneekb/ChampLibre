@@ -814,12 +814,51 @@
             border-left-width: 4px;
         }
         
-        .legume-list-item.brissonnerie {
+        .legume-list-item.fdlb {
             border-left-color: #5A9041;
         }
         
-        .legume-list-item.geoferme {
-            border-left-color: #FF7700;
+        .legume-list-item.gf {
+            border-left-color: #90CF03;
+        }
+        
+        .legume-list-item.partage {
+            border-left-color: #5A9041;
+        }
+        
+        .legume-list-item.exterieur {
+            border-left-color: #ccc;
+        }
+        
+        .producer-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 22px;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            border-radius: 3px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .producer-badge.fdlb {
+            background-color: #5A9041;
+        }
+        
+        .producer-badge.gf {
+            background-color: #90CF03;
+        }
+        
+        .producer-badge.partage {
+            background: linear-gradient(90deg, #5A9041 50%, #90CF03 50%);
+        }
+        
+        .producer-badge.exterieur {
+            background-color: #999;
+            color: white;
         }
         
         .legume-name-display {
@@ -886,6 +925,13 @@
             .filter-buttons {
                 margin-top: -5px;
                 flex-wrap: wrap;
+            }
+            
+            .producer-badge {
+                width: 32px;
+                height: 18px;
+                font-size: 9px;
+                margin-right: 6px;
             }
         }
         
@@ -2080,8 +2126,9 @@
                     </div>
                     <div class="filter-buttons">
                         <button class="filter-btn active" onclick="setLegumeFilter('all', 'all')">Tous</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Ferme de la Brissonnerie')">Brissonnerie</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Géoferme')">Géoferme</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'FDLB')">FDLB</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'GF')">GF</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Ext')">Ext.</button>
                         <select class="filter-select" id="typeFilterSelect" onchange="setLegumeFilter('type', this.value)">
                             <option value="all">Tous les types</option>
                             <!-- Sera rempli dynamiquement -->
@@ -2129,6 +2176,8 @@
                                     <option value="">Sélectionnez un producteur</option>
                                     <option value="Ferme de la Brissonnerie">Ferme de la Brissonnerie</option>
                                     <option value="Géoferme">Géoferme</option>
+                                    <option value="Partagé">Partagé</option>
+                                    <option value="Extérieur">Extérieur</option>
                                 </select>
                             </div>
                             
@@ -3058,9 +3107,22 @@
             
             let filteredLegumes = allLegumes;
             
-            // Filtrer par producteur ou type
+            // Filtrer par producteur
             if (legumeFilter.type === 'producteur' && legumeFilter.value !== 'all') {
-                filteredLegumes = filteredLegumes.filter(l => l.producteur === legumeFilter.value);
+                if (legumeFilter.value === 'FDLB') {
+                    // Afficher FDLB + Partagé
+                    filteredLegumes = filteredLegumes.filter(l => 
+                        l.producteur === 'Ferme de la Brissonnerie' || l.producteur === 'Partagé'
+                    );
+                } else if (legumeFilter.value === 'GF') {
+                    // Afficher GF + Partagé
+                    filteredLegumes = filteredLegumes.filter(l => 
+                        l.producteur === 'Géoferme' || l.producteur === 'Partagé'
+                    );
+                } else if (legumeFilter.value === 'Ext') {
+                    // Afficher seulement Extérieur
+                    filteredLegumes = filteredLegumes.filter(l => l.producteur === 'Extérieur');
+                }
             } else if (legumeFilter.type === 'type' && legumeFilter.value !== 'all') {
                 filteredLegumes = filteredLegumes.filter(l => l.type === legumeFilter.value);
             }
@@ -3084,14 +3146,40 @@
             
             filteredLegumes.forEach((legume) => {
                 const div = document.createElement('div');
-                const producteurClass = legume.producteur.toLowerCase().includes('brissonnerie') ? 'brissonnerie' : 'geoferme';
+                
+                // Déterminer la classe CSS selon le producteur
+                let producteurClass = '';
+                let badgeClass = '';
+                let badgeText = '';
+                
+                if (legume.producteur === 'Ferme de la Brissonnerie') {
+                    producteurClass = 'fdlb';
+                    badgeClass = 'fdlb';
+                    badgeText = 'FDLB';
+                } else if (legume.producteur === 'Géoferme') {
+                    producteurClass = 'gf';
+                    badgeClass = 'gf';
+                    badgeText = 'GF';
+                } else if (legume.producteur === 'Partagé') {
+                    producteurClass = 'partage';
+                    badgeClass = 'partage';
+                    badgeText = 'Part.';
+                } else if (legume.producteur === 'Extérieur') {
+                    producteurClass = 'exterieur';
+                    badgeClass = 'exterieur';
+                    badgeText = 'Ext.';
+                }
+                
                 div.className = `legume-list-item ${producteurClass}`;
                 div.onclick = () => showLegumeDetails(legume);
                 
                 const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
                 
                 div.innerHTML = `
-                    <div class="legume-name-display">${legume.nom}</div>
+                    <div style="display: flex; align-items: center; flex: 1;">
+                        <span class="producer-badge ${badgeClass}">${badgeText}</span>
+                        <div class="legume-name-display">${legume.nom}</div>
+                    </div>
                     <div class="legume-right-info">
                         <div class="legume-price-display">${priceDisplay}€<span class="legume-unit-display">/${legume.unite}</span></div>
                     </div>
@@ -3171,7 +3259,7 @@
                 </div>
                 <div class="client-detail-row">
                     <div class="client-detail-label">Prix/Unité</div>
-                    <div class="client-detail-value" style="font-weight: bold; color: ${legume.producteur.includes('Brissonnerie') ? '#5A9041' : '#FF7700'};">
+                    <div class="client-detail-value" style="font-weight: bold; color: #333;">
                         ${priceDisplay} €/${legume.unite}
                     </div>
                 </div>
@@ -3626,17 +3714,22 @@
                 
                 const card = document.createElement('div');
                 
-                // Détection stricte des producteurs
+                // Détection des producteurs
                 let cardClass = 'vegetable-card';
                 let isValidProducer = false;
                 
                 if (producteur) {
-                    const producteurLower = producteur.toLowerCase().trim();
-                    if (producteurLower === 'ferme de la brissonnerie') {
+                    if (producteur === 'Ferme de la Brissonnerie') {
                         cardClass += ' tibere';
                         isValidProducer = true;
-                    } else if (producteurLower === 'géoferme' || producteurLower === 'geoferme') {
+                        totalTibere += price;
+                    } else if (producteur === 'Géoferme') {
                         cardClass += ' principal';
+                        isValidProducer = true;
+                        totalPrincipal += price;
+                    } else if (producteur === 'Partagé' || producteur === 'Extérieur') {
+                        // Pour Partagé et Extérieur, on ne les compte pas dans les totaux
+                        cardClass += ' principal'; // Utiliser la couleur orange par défaut
                         isValidProducer = true;
                     }
                 }
@@ -3659,13 +3752,6 @@
                 `;
                 
                 container.appendChild(card);
-                
-                // Calculer les totaux
-                if (cardClass.includes('tibere')) {
-                    totalTibere += price;
-                } else if (cardClass.includes('principal')) {
-                    totalPrincipal += price;
-                }
             });
             
             updateSummary(totalTibere, totalPrincipal, data.length);
