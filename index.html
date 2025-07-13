@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ChampLibre - Laissez le champ libre à votre collaboration</title>
+    <title>ChampLibre v4.0 - Laissez le champ libre à votre collaboration</title>
     <style>
         * {
             box-sizing: border-box;
@@ -32,8 +32,8 @@
             background-color: #5A9041;
             color: white;
             text-align: center;
-            padding: 12px 80px 12px 12px;
-            font-size: 20px;
+            padding: 16px 140px 16px 16px;
+            font-size: 24px;
             font-weight: bold;
             position: sticky;
             top: 0;
@@ -59,6 +59,7 @@
             cursor: pointer;
             position: absolute;
             right: 10px;
+            top: 10px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
             transition: background-color 0.3s ease;
             font-family: inherit;
@@ -69,15 +70,32 @@
             background-color: rgba(90, 144, 65, 0.5);
         }
         
+        .user-info {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            color: rgba(255,255,255,0.9);
+            font-size: 12px;
+            font-weight: normal;
+            text-align: center;
+        }
+        
         @media (min-width: 768px) {
             .app-header {
-                padding: 16px 120px 16px 16px;
-                font-size: 24px;
+                padding: 20px 160px 20px 20px;
+                font-size: 28px;
             }
             
             .signout-btn-header {
                 right: 20px;
+                top: 15px;
                 padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .user-info {
+                right: 20px;
+                top: 55px;
                 font-size: 14px;
             }
         }
@@ -91,7 +109,7 @@
             justify-content: center;
             align-items: center;
             position: sticky;
-            top: 54px;
+            top: 72px;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             border-top: 1px solid rgba(255,255,255,0.2);
@@ -99,7 +117,7 @@
         
         @media (min-width: 768px) {
             .nav-bar {
-                top: 74px;
+                top: 88px;
                 position: sticky;
                 padding: 15px 20px;
             }
@@ -243,18 +261,18 @@
         
         .app-header img,
         .header-logo {
-            height: 40px;
-            width: 64px;
-            margin-right: 10px;
+            height: 48px;
+            width: 77px;
+            margin-right: 12px;
             vertical-align: middle;
         }
         
         @media (max-width: 768px) {
             .app-header img,
             .header-logo {
-                height: 30px;
-                width: 48px;
-                margin-right: 8px;
+                height: 36px;
+                width: 58px;
+                margin-right: 10px;
             }
         }
         
@@ -1257,7 +1275,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            min-width: 200px;
+            min-width: 280px;
             cursor: pointer;
             background: white;
         }
@@ -1271,57 +1289,34 @@
         .basket-summary {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 20px;
             border: 1px solid rgba(90, 144, 65, 0.1);
-        }
-        
-        @media (max-width: 768px) {
-            .basket-summary {
-                padding: 10px;
-                margin-bottom: 15px;
-            }
         }
         
         .summary-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .summary-total h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 10px 0;
             color: #5A9041;
-            font-size: 16px;
+            font-size: 18px;
         }
         
         .total-amount {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #5A9041;
         }
         
         .summary-chart {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             position: relative;
-        }
-        
-        @media (max-width: 768px) {
-            .summary-total h3 {
-                font-size: 14px;
-                margin-bottom: 3px;
-            }
-            
-            .total-amount {
-                font-size: 20px;
-            }
-            
-            .summary-chart {
-                width: 60px;
-                height: 60px;
-            }
         }
         
         #repartitionChart {
@@ -1342,13 +1337,6 @@
             width: 100%;
         }
         
-        @media (max-width: 768px) {
-            .edit-basket-btn {
-                padding: 8px 20px;
-                font-size: 14px;
-            }
-        }
-        
         .edit-basket-btn:hover {
             background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
@@ -1357,30 +1345,24 @@
         
         .vegetable-cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
         }
         
-        @media (max-width: 768px) {
+        @media (min-width: 768px) {
             .vegetable-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
             }
         }
         
         .vegetable-card {
-            padding: 16px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid rgba(0,0,0,0.1);
             transition: all 0.2s ease;
             cursor: pointer;
             background: white;
-        }
-        
-        @media (max-width: 768px) {
-            .vegetable-card {
-                padding: 12px;
-            }
         }
         
         .vegetable-card:hover {
@@ -1416,13 +1398,13 @@
         
         .vegetable-name {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 4px;
             color: #333;
         }
         
         .vegetable-details {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.8;
             color: #666;
         }
@@ -1430,21 +1412,7 @@
         .vegetable-price {
             font-weight: bold;
             margin-top: 4px;
-            font-size: 16px;
-        }
-        
-        @media (max-width: 768px) {
-            .vegetable-name {
-                font-size: 14px;
-            }
-            
-            .vegetable-details {
-                font-size: 12px;
-            }
-            
-            .vegetable-price {
-                font-size: 14px;
-            }
+            font-size: 14px;
         }
         
         @media (max-width: 768px) {
@@ -1453,7 +1421,7 @@
             }
             
             .week-select {
-                min-width: 150px;
+                min-width: 220px;
                 font-size: 14px;
             }
             
@@ -1517,12 +1485,15 @@
             <img src="logo ChampLibre.png" alt="ChampLibre" class="header-logo">
             <div>
                 ChampLibre<br>
-                <span class="app-version">v3.0</span>
+                <span class="app-version">v4.0</span>
             </div>
         </div>
         <button class="signout-btn-header" onclick="handleSignoutClick()">
             Déconnexion
         </button>
+        <div class="user-info" id="userInfo">
+            <!-- Sera rempli dynamiquement -->
+        </div>
     </div>
     
     <!-- Navigation -->
@@ -1557,7 +1528,7 @@
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
                     Se connecter avec Google
                 </button>
-                <div class="version-text">Version 3.0</div>
+                <div class="version-text">Version 4.0</div>
             </div>
         </div>
         
@@ -1570,7 +1541,7 @@
                 <h1 class="login-title">ChampLibre</h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
                 <h2 id="welcomeMessage" class="welcome-message">Bonjour !</h2>
-                <div class="version-text">Version 3.0</div>
+                <div class="version-text">Version 4.0</div>
             </div>
         </div>
 
@@ -1771,7 +1742,7 @@
 
     <script>
         // Configuration
-        const APP_VERSION = '3.0';
+        const APP_VERSION = '4.0';
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
         const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
@@ -1799,6 +1770,7 @@
         let hasTriedAutoConnect = false; // Pour éviter les boucles infinies
         let panierItems = []; // Pour stocker les items du panier en cours
         let currentWeek = ''; // Pour stocker la semaine courante
+        let userFirstName = ''; // Pour stocker le prénom de l'utilisateur
         
         // Date du jour
         const today = new Date();
@@ -1848,7 +1820,7 @@
             } else if (sectionName === 'clients' && gapi.client.getToken() !== null) {
                 loadAllClients();
             } else if (sectionName === 'paniers' && gapi.client.getToken() !== null) {
-                // Initialiser le sélecteur de semaines
+                // Initialiser le sélecteur de semaines uniquement si connecté
                 initWeekSelector();
             }
         }
@@ -2017,6 +1989,11 @@
                 document.getElementById('appHeader').classList.remove('hidden');
                 document.getElementById('mainNav').classList.remove('hidden');
                 
+                // Afficher le prénom de l'utilisateur dans le header
+                if (userFirstName) {
+                    document.getElementById('userInfo').textContent = userFirstName;
+                }
+                
                 // Message de succès
                 const status = document.getElementById('status');
                 status.textContent = 'Connecté avec succès!';
@@ -2061,10 +2038,14 @@
                     displayName = 'là';
                 }
                 
+                // Stocker le prénom
+                userFirstName = displayName;
+                
                 document.getElementById('welcomeMessage').textContent = `Bonjour ${displayName} !`;
             } catch (err) {
                 console.error('Erreur récupération infos utilisateur:', err);
                 document.getElementById('welcomeMessage').textContent = 'Bonjour !';
+                userFirstName = '';
             }
         }
 
@@ -2088,6 +2069,8 @@
                 clients = [];
                 distributionStatus = {};
                 panierItems = [];
+                userFirstName = '';
+                document.getElementById('userInfo').textContent = '';
                 
                 // Masquer le statut de connexion
                 document.getElementById('loginStatus').classList.add('hidden');
@@ -2627,37 +2610,72 @@
             const select = document.getElementById('weekSelect');
             select.innerHTML = '';
             
-            // Générer les 12 dernières semaines
-            const weeks = [];
-            const currentDate = new Date();
-            
-            for (let i = 0; i < 12; i++) {
-                const date = new Date(currentDate);
-                date.setDate(date.getDate() - (i * 7));
-                const weekNum = getWeekNumber(date);
-                const weekDates = getWeekDates(weekNum);
-                
-                weeks.push({
-                    value: weekNum,
-                    label: `Semaine du ${weekDates.start.toLocaleDateString('fr-FR')} au ${weekDates.end.toLocaleDateString('fr-FR')}`
+            try {
+                // Charger toutes les semaines présentes dans le sheet
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Composition des paniers!B2:B1000',
                 });
-            }
-            
-            // Ajouter les options (plus récentes en haut)
-            weeks.forEach(week => {
+                
+                const values = response.result.values || [];
+                const uniqueWeeks = new Set();
+                
+                // Extraire toutes les semaines uniques
+                values.forEach(row => {
+                    if (row[0]) {
+                        uniqueWeeks.add(row[0]);
+                    }
+                });
+                
+                // Trier les semaines par ordre décroissant (plus récentes en premier)
+                const weeksArray = Array.from(uniqueWeeks).sort((a, b) => {
+                    // Extraire année et numéro de semaine pour un tri correct
+                    const [yearA, weekA] = a.split('-S');
+                    const [yearB, weekB] = b.split('-S');
+                    
+                    if (yearA !== yearB) {
+                        return parseInt(yearB) - parseInt(yearA);
+                    }
+                    return parseInt(weekB) - parseInt(weekA);
+                });
+                
+                // Ajouter les options au select
+                weeksArray.forEach(weekString => {
+                    const option = document.createElement('option');
+                    option.value = weekString;
+                    
+                    // Formatter l'affichage de la semaine
+                    const [year, week] = weekString.split('-S');
+                    const weekNum = parseInt(week);
+                    const weekDates = getWeekDates(weekString);
+                    
+                    // Format: "Sem 28 du 07/07 au 13/07/2025"
+                    const startDate = weekDates.start.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+                    const endDate = weekDates.end.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+                    
+                    option.textContent = `Sem ${weekNum} du ${startDate} au ${endDate}/${year}`;
+                    select.appendChild(option);
+                });
+                
+                // Sélectionner la première semaine (la plus récente)
+                if (weeksArray.length > 0) {
+                    currentWeek = weeksArray[0];
+                    select.value = currentWeek;
+                    await loadWeekData();
+                } else {
+                    // Aucune semaine trouvée
+                    const option = document.createElement('option');
+                    option.textContent = 'Aucune semaine disponible';
+                    option.disabled = true;
+                    select.appendChild(option);
+                }
+                
+            } catch (err) {
+                console.error('Erreur chargement des semaines:', err);
                 const option = document.createElement('option');
-                option.value = week.value;
-                option.textContent = week.label;
+                option.textContent = 'Erreur de chargement';
+                option.disabled = true;
                 select.appendChild(option);
-            });
-            
-            // Sélectionner la semaine courante
-            currentWeek = getWeekNumber(new Date());
-            select.value = currentWeek;
-            
-            // Si connecté, charger les données
-            if (gapi.client.getToken() !== null) {
-                await loadWeekData();
             }
         }
         
@@ -2723,6 +2741,7 @@
             
             let totalTibere = 0;
             let totalPrincipal = 0;
+            let ignoredCount = 0;
             
             if (data.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">Aucune composition pour cette semaine</div>';
@@ -2794,7 +2813,7 @@
             const ctx = canvas.getContext('2d');
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = window.innerWidth <= 768 ? 25 : 35;
+            const radius = 40;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -2832,4 +2851,4 @@
         }
     </script>
 </body>
-</html></html>
+</html></html></html></html>
