@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ChampLibre v4.1 - Laissez le champ libre à votre collaboration</title>
+    <title>ChampLibre v4.0 - Laissez le champ libre à votre collaboration</title>
     <style>
         * {
             box-sizing: border-box;
@@ -252,13 +252,17 @@
         
         .login-logo img {
             width: 120px;
-            height: 120px;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
         }
         
         @media (max-width: 768px) {
             .login-logo img {
                 width: 80px;
-                height: 80px;
+                height: auto;
+                max-height: 80px;
+                object-fit: contain;
             }
         }
         
@@ -1348,14 +1352,21 @@
         
         .vegetable-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
         
         @media (min-width: 768px) {
             .vegetable-cards {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .vegetable-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
             }
         }
         
@@ -1441,8 +1452,13 @@
             }
             
             .summary-content {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .summary-total {
+                text-align: left;
             }
             
             .summary-total h3 {
@@ -1454,13 +1470,11 @@
             }
             
             .summary-chart {
-                margin-top: 15px;
+                margin-top: 0;
+                width: 80px;
+                height: 80px;
             }
             
-            .vegetable-cards {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
-            }
             
         @media (max-width: 768px) {
             .vegetable-card {
@@ -1681,7 +1695,7 @@
                 <!-- Sélecteur de semaine -->
                 <div class="week-selector">
                     <button class="week-nav-btn" onclick="previousWeek()">◀</button>
-                    <select id="weekSelect" class="week-select" onchange="loadWeekData()">
+                    <select id="weekSelect" class="week-select" onchange="loadWeekData(); updateNavigationButtons();">
                         <!-- Sera rempli dynamiquement -->
                     </select>
                     <button class="week-nav-btn" onclick="nextWeek()">▶</button>
@@ -2667,6 +2681,7 @@
                 if (weeksArray.length > 0) {
                     currentWeek = weeksArray[0];
                     select.value = currentWeek;
+                    updateNavigationButtons();
                     await loadWeekData();
                 } else {
                     // Aucune semaine trouvée
@@ -2674,6 +2689,7 @@
                     option.textContent = 'Aucune semaine disponible';
                     option.disabled = true;
                     select.appendChild(option);
+                    updateNavigationButtons();
                 }
                 
             } catch (err) {
@@ -2705,10 +2721,28 @@
             }
         }
         
+        // Mettre à jour la visibilité des boutons de navigation
+        function updateNavigationButtons() {
+            const select = document.getElementById('weekSelect');
+            const prevBtn = document.querySelector('.week-nav-btn:first-child');
+            const nextBtn = document.querySelector('.week-nav-btn:last-child');
+            
+            if (prevBtn) {
+                prevBtn.style.visibility = select.selectedIndex < select.options.length - 1 ? 'visible' : 'hidden';
+            }
+            
+            if (nextBtn) {
+                nextBtn.style.visibility = select.selectedIndex > 0 ? 'visible' : 'hidden';
+            }
+        }
+        
         // Charger les données d'une semaine
         async function loadWeekData() {
             const selectedWeek = document.getElementById('weekSelect').value;
             currentWeek = selectedWeek;
+            
+            // Mettre à jour les boutons de navigation
+            updateNavigationButtons();
             
             try {
                 const status = document.getElementById('status');
@@ -2819,7 +2853,8 @@
             const ctx = canvas.getContext('2d');
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = 40;
+            // Adapter le radius selon la taille du canvas
+            const radius = window.innerWidth <= 768 ? 35 : 40;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
