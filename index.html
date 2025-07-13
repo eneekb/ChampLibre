@@ -790,7 +790,6 @@
         .legume-list-item {
             padding: 8px 12px;
             border-bottom: 1px solid #eee;
-            border-left: 3px solid transparent;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -811,23 +810,6 @@
         .legume-list-item:hover {
             background: linear-gradient(to right, #f8f9fa 0%, #f0f1f2 100%);
             padding-left: 15px;
-            border-left-width: 4px;
-        }
-        
-        .legume-list-item.fdlb {
-            border-left-color: #5A9041;
-        }
-        
-        .legume-list-item.gf {
-            border-left-color: #90CF03;
-        }
-        
-        .legume-list-item.partage {
-            border-left-color: #5A9041;
-        }
-        
-        .legume-list-item.exterieur {
-            border-left-color: #ccc;
         }
         
         .producer-badge {
@@ -893,12 +875,10 @@
         @media (max-width: 768px) {
             .legume-list-item {
                 padding: 6px 10px;
-                border-left-width: 2px;
             }
             
             .legume-list-item:hover {
                 padding-left: 12px;
-                border-left-width: 3px;
             }
             
             .legume-name-display {
@@ -2160,8 +2140,6 @@
                                     <option value="Kg">Kg</option>
                                     <option value="Pièce">Pièce</option>
                                     <option value="Botte">Botte</option>
-                                    <option value="Barquette">Barquette</option>
-                                    <option value="Sachet">Sachet</option>
                                 </select>
                             </div>
                             
@@ -2183,7 +2161,12 @@
                             
                             <div class="form-group">
                                 <label>Type</label>
-                                <input type="text" id="legumeType" placeholder="Ex: Légume racine, Légume feuille...">
+                                <select id="legumeType">
+                                    <option value="">Sélectionnez un type</option>
+                                    <option value="Terreux">Terreux</option>
+                                    <option value="Résistant">Résistant</option>
+                                    <option value="Fragile">Fragile</option>
+                                </select>
                             </div>
                             
                             <div class="form-group">
@@ -3086,18 +3069,14 @@
         // Mettre à jour le filtre de types
         function updateTypeFilter() {
             const select = document.getElementById('typeFilterSelect');
-            const types = [...new Set(allLegumes.map(l => l.type).filter(t => t))];
             
-            // Garder l'option "Tous les types"
-            select.innerHTML = '<option value="all">Tous les types</option>';
-            
-            // Ajouter les types uniques
-            types.sort().forEach(type => {
-                const option = document.createElement('option');
-                option.value = type;
-                option.textContent = type;
-                select.appendChild(option);
-            });
+            // Toujours afficher les 3 types prédéfinis
+            select.innerHTML = `
+                <option value="all">Tous les types</option>
+                <option value="Terreux">Terreux</option>
+                <option value="Résistant">Résistant</option>
+                <option value="Fragile">Fragile</option>
+            `;
         }
         
         // Afficher la liste des légumes
