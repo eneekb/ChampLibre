@@ -695,6 +695,18 @@
         }
         
         /* Styles pour la section Légumes (similaires aux Clients) */
+        #legumes .filter-btn {
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            #legumes .filter-btn {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+        }
+        
         .legumes-controls {
             display: flex;
             flex-direction: column;
@@ -938,15 +950,18 @@
             .filter-buttons {
                 margin-top: -5px;
                 flex-wrap: wrap;
+            }
+            
+            #legumes .filter-buttons {
                 gap: 4px;
             }
             
-            .filter-btn {
+            #legumes .filter-btn {
                 padding: 4px 6px;
                 font-size: 11px;
             }
             
-            .filter-select {
+            #legumes .filter-select {
                 padding: 4px 8px;
                 font-size: 11px;
                 width: auto;
@@ -1787,7 +1802,7 @@
         }
         
         .vegetable-card.principal:hover {
-            box-shadow: 0 3px 8px rgba(144, 207, 3, 0.25);
+            box-shadow: 0 3px 8px rgba(255, 119, 0, 0.25);
         }
         
         .vegetable-card.partage:hover {
