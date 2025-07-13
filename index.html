@@ -2959,6 +2959,369 @@
             const actif = document.getElementById('clientActif').checked;
             
             // Vérifier les doublons
+            const duplicate = allClients.find(c => 
+                c.nom.toLowerCase() === nom.toLowerCase() && 
+                c.prenom.toLowerCase() === prenom.toLowerCase() &&
+                c.index !== index
+            );
+            
+            if (duplicate) {
+                alert('Un client avec ce nom et prénom existe déjà !');
+                return;
+            }
+            
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Enregistrement...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const values = [[
+                    nom,
+                    prenom,
+                    email,
+                    telephone,
+                    actif ? 'OUI' : 'NON',
+                    dateInscription,
+                    commentaires,
+                    solde
+                ]];
+                
+                if (index === -1) {
+                    // Nouveau client
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: 'Clients!A:H',
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                } else {
+                    // Mise à jour
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: `Clients!A${index}:H${index}`,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                }
+                
+                status.textContent = 'Client enregistré avec succès !';
+                status.className = 'status success';
+                hideClientForm();
+                await loadAllClients();
+                
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+        
+        // ========== FONCTIONS LÉGUMES ==========
+        
+        // Fonction pour supprimer les accents
+        function removeAccents(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+        
+        // Charger tous les légumes
+        async function loadAllLegumes() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Chargement des légumes...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Légumes!A2:F100',
+                });
+                
+                const values = response.result.values || [];
+                allLegumes = values.map((row, index) => ({
+                    index: index + 2, // +2 car on commence à la ligne 2 dans Sheets
+                    nom: row[0] || '',
+                    unite: row[1] || '',
+                    prix: parseFloat(row[2]) || 0,
+                    producteur: row[3] || '',
+                    type: row[4] || '',
+                    commentaires: row[5] || ''
+                }));
+                
+                // Remplir les types uniques dans le select
+                updateTypeFilter();
+                
+                displayLegumesList();
+                status.textContent = `${allLegumes.length} légumes chargés`;
+                status.className = 'status success';
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+        
+        // Mettre à jour le filtre de types
+        function updateTypeFilter() {
+            const select = document.getElementById('typeFilterSelect');
+            
+            // Toujours afficher les 3 types prédéfinis
+            select.innerHTML = `
+                <option value="all">Tous les types</option>
+                <option value="Terreux">Terreux</option>
+                <option value="Résistant">Résistant</option>
+                <option value="Fragile">Fragile</option>
+            `;
+        }
+        
+        // Afficher la liste des légumes
+        function displayLegumesList() {
+            const container = document.getElementById('legumesListContainer');
+            const searchTerm = removeAccents(document.getElementById('searchLegumes').value.toLowerCase());
+            
+            let filteredLegumes = allLegumes;
+            
+            // Filtrer par producteur
+            if (legumeFilter.type === 'producteur' && legumeFilter.value !== 'all') {
+                if (legumeFilter.value === 'FDLB') {
+                    // Afficher FDLB + Partagé
+                    filteredLegumes = filteredLegumes.filter(l => 
+                        l.producteur === 'Ferme de la Brissonnerie' || l.producteur === 'Partagé'
+                    );
+                } else if (legumeFilter.value === 'GF') {
+                    // Afficher GF + Partagé
+                    filteredLegumes = filteredLegumes.filter(l => 
+                        l.producteur === 'Géoferme' || l.producteur === 'Partagé'
+                    );
+                } else if (legumeFilter.value === 'Ext') {
+                    // Afficher seulement Extérieur
+                    filteredLegumes = filteredLegumes.filter(l => l.producteur === 'Extérieur');
+                }
+            } else if (legumeFilter.type === 'type' && legumeFilter.value !== 'all') {
+                filteredLegumes = filteredLegumes.filter(l => l.type === legumeFilter.value);
+            }
+            
+            // Filtrer par recherche
+            if (searchTerm) {
+                filteredLegumes = filteredLegumes.filter(l => 
+                    removeAccents(l.nom.toLowerCase()).includes(searchTerm)
+                );
+            }
+            
+            // Trier par nom
+            filteredLegumes.sort((a, b) => a.nom.toLowerCase().localeCompare(b.nom.toLowerCase()));
+            
+            container.innerHTML = '';
+            
+            if (filteredLegumes.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Aucun légume trouvé</div>';
+                return;
+            }
+            
+            filteredLegumes.forEach((legume) => {
+                const div = document.createElement('div');
+                
+                // Déterminer la classe CSS selon le producteur
+                let producteurClass = '';
+                let badgeClass = '';
+                let badgeText = '';
+                
+                if (legume.producteur === 'Ferme de la Brissonnerie') {
+                    producteurClass = 'fdlb';
+                    badgeClass = 'fdlb';
+                    badgeText = 'FDLB';
+                } else if (legume.producteur === 'Géoferme') {
+                    producteurClass = 'gf';
+                    badgeClass = 'gf';
+                    badgeText = 'GF';
+                } else if (legume.producteur === 'Partagé') {
+                    producteurClass = 'partage';
+                    badgeClass = 'partage';
+                    badgeText = 'Part.';
+                } else if (legume.producteur === 'Extérieur') {
+                    producteurClass = 'exterieur';
+                    badgeClass = 'exterieur';
+                    badgeText = 'Ext.';
+                }
+                
+                div.className = `legume-list-item ${producteurClass}`;
+                div.onclick = () => showLegumeDetails(legume);
+                
+                const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
+                
+                div.innerHTML = `
+                    <div style="display: flex; align-items: center; flex: 1;">
+                        <span class="producer-badge ${badgeClass}">${badgeText}</span>
+                        <div class="legume-name-display">${legume.nom}</div>
+                    </div>
+                    <div class="legume-right-info">
+                        <div class="legume-price-display">${priceDisplay}€<span class="legume-unit-display">/${legume.unite}</span></div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+        
+        // Filtrer les légumes
+        function filterLegumes() {
+            displayLegumesList();
+        }
+        
+        // Définir le filtre
+        function setLegumeFilter(type, value) {
+            legumeFilter = { type, value };
+            
+            // Mettre à jour les boutons actifs
+            if (type === 'all') {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                document.querySelector('.filter-select').value = 'all';
+                document.querySelector('.filter-select').classList.remove('active');
+                document.querySelector('.filter-select').classList.remove('active');
+            } else if (type === 'producteur') {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                document.querySelector('.filter-select').value = 'all';
+            } else if (type === 'type') {
+                document.querySelectorAll('.filter-btn').forEach((btn, index) => {
+                    if (index === 0) {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Gérer la classe active du select
+                const select = document.querySelector('.filter-select');
+                if (value === 'all') {
+                    select.classList.remove('active');
+                    document.querySelectorAll('.filter-btn')[0].classList.add('active');
+                } else {
+                    select.classList.add('active');
+                }
+            }
+            
+            displayLegumesList();
+        }
+        
+        // Afficher les détails d'un légume
+        function showLegumeDetails(legume) {
+            const panel = document.getElementById('legumeDetailsPanel');
+            const content = document.getElementById('legumeDetailsContent');
+            
+            // Stocker le légume actuel pour l'édition
+            window.currentDetailLegume = legume;
+            
+            const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
+            
+            content.innerHTML = `
+                <div style="padding: 15px 20px 10px; margin-bottom: 10px;">
+                    <button class="edit-legume-btn" onclick="editLegume(window.currentDetailLegume)" style="width: 100%;">
+                        ✏️ Modifier
+                    </button>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Nom</div>
+                    <div class="client-detail-value">${legume.nom}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Unité</div>
+                    <div class="client-detail-value">${legume.unite}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Prix/Unité</div>
+                    <div class="client-detail-value" style="font-weight: bold; color: #333;">
+                        ${priceDisplay} €/${legume.unite}
+                    </div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Producteur</div>
+                    <div class="client-detail-value">${legume.producteur}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Type</div>
+                    <div class="client-detail-value">${legume.type || 'Non spécifié'}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Commentaires</div>
+                    <div class="client-detail-value">${legume.commentaires || 'Aucun commentaire'}</div>
+                </div>
+            `;
+            
+            panel.classList.remove('hidden');
+            setTimeout(() => panel.classList.add('show'), 10);
+        }
+        
+        // Masquer les détails
+        function hideLegumeDetails() {
+            const panel = document.getElementById('legumeDetailsPanel');
+            panel.classList.remove('show');
+            setTimeout(() => panel.classList.add('hidden'), 300);
+        }
+        
+        // Afficher le formulaire légume
+        function showLegumeForm(legume = null) {
+            const overlay = document.getElementById('legumeFormOverlay');
+            const title = document.getElementById('legumeFormTitle');
+            const form = document.getElementById('legumeForm');
+            
+            if (legume) {
+                title.textContent = 'Modifier le légume';
+                document.getElementById('legumeIndex').value = legume.index;
+                document.getElementById('legumeNom').value = legume.nom;
+                document.getElementById('legumeUnite').value = legume.unite;
+                document.getElementById('legumePrix').value = legume.prix.toFixed(2);
+                document.getElementById('legumeProducteur').value = legume.producteur;
+                document.getElementById('legumeType').value = legume.type || '';
+                document.getElementById('legumeCommentaires').value = legume.commentaires || '';
+            } else {
+                title.textContent = 'Nouveau légume';
+                form.reset();
+                document.getElementById('legumeIndex').value = '-1';
+            }
+            
+            overlay.classList.remove('hidden');
+        }
+        
+        // Éditer un légume
+        function editLegume(legume) {
+            hideLegumeDetails();
+            showLegumeForm(legume);
+        }
+        
+        // Masquer le formulaire
+        function hideLegumeForm(event) {
+            if (!event || event.target.id === 'legumeFormOverlay') {
+                document.getElementById('legumeFormOverlay').classList.add('hidden');
+            }
+        }
+        
+        // Sauvegarder un légume
+        async function saveLegume(event) {
+            event.preventDefault();
+            
+            const index = parseInt(document.getElementById('legumeIndex').value);
+            const nom = document.getElementById('legumeNom').value.trim();
+            const unite = document.getElementById('legumeUnite').value;
+            const prix = document.getElementById('legumePrix').value;
+            const producteur = document.getElementById('legumeProducteur').value;
+            const type = document.getElementById('legumeType').value.trim();
+            const commentaires = document.getElementById('legumeCommentaires').value.trim();
+            
+            // Vérifier les doublons
             const duplicate = allLegumes.find(l => 
                 removeAccents(l.nom.toLowerCase()) === removeAccents(nom.toLowerCase()) &&
                 l.producteur === producteur &&
@@ -3439,366 +3802,3 @@
     </script>
 </body>
 </html>
-            const duplicate = allClients.find(c => 
-                c.nom.toLowerCase() === nom.toLowerCase() && 
-                c.prenom.toLowerCase() === prenom.toLowerCase() &&
-                c.index !== index
-            );
-            
-            if (duplicate) {
-                alert('Un client avec ce nom et prénom existe déjà !');
-                return;
-            }
-            
-            try {
-                const status = document.getElementById('status');
-                status.textContent = 'Enregistrement...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
-                
-                const values = [[
-                    nom,
-                    prenom,
-                    email,
-                    telephone,
-                    actif ? 'OUI' : 'NON',
-                    dateInscription,
-                    commentaires,
-                    solde
-                ]];
-                
-                if (index === -1) {
-                    // Nouveau client
-                    await gapi.client.sheets.spreadsheets.values.append({
-                        spreadsheetId: SPREADSHEET_ID,
-                        range: 'Clients!A:H',
-                        valueInputOption: 'USER_ENTERED',
-                        resource: { values }
-                    });
-                } else {
-                    // Mise à jour
-                    await gapi.client.sheets.spreadsheets.values.update({
-                        spreadsheetId: SPREADSHEET_ID,
-                        range: `Clients!A${index}:H${index}`,
-                        valueInputOption: 'USER_ENTERED',
-                        resource: { values }
-                    });
-                }
-                
-                status.textContent = 'Client enregistré avec succès !';
-                status.className = 'status success';
-                hideClientForm();
-                await loadAllClients();
-                
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
-                
-            } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
-            }
-        }
-        
-        // ========== FONCTIONS LÉGUMES ==========
-        
-        // Fonction pour supprimer les accents
-        function removeAccents(str) {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        }
-        
-        // Charger tous les légumes
-        async function loadAllLegumes() {
-            try {
-                const status = document.getElementById('status');
-                status.textContent = 'Chargement des légumes...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
-                
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Légumes!A2:F100',
-                });
-                
-                const values = response.result.values || [];
-                allLegumes = values.map((row, index) => ({
-                    index: index + 2, // +2 car on commence à la ligne 2 dans Sheets
-                    nom: row[0] || '',
-                    unite: row[1] || '',
-                    prix: parseFloat(row[2]) || 0,
-                    producteur: row[3] || '',
-                    type: row[4] || '',
-                    commentaires: row[5] || ''
-                }));
-                
-                // Remplir les types uniques dans le select
-                updateTypeFilter();
-                
-                displayLegumesList();
-                status.textContent = `${allLegumes.length} légumes chargés`;
-                status.className = 'status success';
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
-                
-            } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
-            }
-        }
-        
-        // Mettre à jour le filtre de types
-        function updateTypeFilter() {
-            const select = document.getElementById('typeFilterSelect');
-            
-            // Toujours afficher les 3 types prédéfinis
-            select.innerHTML = `
-                <option value="all">Tous les types</option>
-                <option value="Terreux">Terreux</option>
-                <option value="Résistant">Résistant</option>
-                <option value="Fragile">Fragile</option>
-            `;
-        }
-        
-        // Afficher la liste des légumes
-        function displayLegumesList() {
-            const container = document.getElementById('legumesListContainer');
-            const searchTerm = removeAccents(document.getElementById('searchLegumes').value.toLowerCase());
-            
-            let filteredLegumes = allLegumes;
-            
-            // Filtrer par producteur
-            if (legumeFilter.type === 'producteur' && legumeFilter.value !== 'all') {
-                if (legumeFilter.value === 'FDLB') {
-                    // Afficher FDLB + Partagé
-                    filteredLegumes = filteredLegumes.filter(l => 
-                        l.producteur === 'Ferme de la Brissonnerie' || l.producteur === 'Partagé'
-                    );
-                } else if (legumeFilter.value === 'GF') {
-                    // Afficher GF + Partagé
-                    filteredLegumes = filteredLegumes.filter(l => 
-                        l.producteur === 'Géoferme' || l.producteur === 'Partagé'
-                    );
-                } else if (legumeFilter.value === 'Ext') {
-                    // Afficher seulement Extérieur
-                    filteredLegumes = filteredLegumes.filter(l => l.producteur === 'Extérieur');
-                }
-            } else if (legumeFilter.type === 'type' && legumeFilter.value !== 'all') {
-                filteredLegumes = filteredLegumes.filter(l => l.type === legumeFilter.value);
-            }
-            
-            // Filtrer par recherche
-            if (searchTerm) {
-                filteredLegumes = filteredLegumes.filter(l => 
-                    removeAccents(l.nom.toLowerCase()).includes(searchTerm)
-                );
-            }
-            
-            // Trier par nom
-            filteredLegumes.sort((a, b) => a.nom.toLowerCase().localeCompare(b.nom.toLowerCase()));
-            
-            container.innerHTML = '';
-            
-            if (filteredLegumes.length === 0) {
-                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Aucun légume trouvé</div>';
-                return;
-            }
-            
-            filteredLegumes.forEach((legume) => {
-                const div = document.createElement('div');
-                
-                // Déterminer la classe CSS selon le producteur
-                let producteurClass = '';
-                let badgeClass = '';
-                let badgeText = '';
-                
-                if (legume.producteur === 'Ferme de la Brissonnerie') {
-                    producteurClass = 'fdlb';
-                    badgeClass = 'fdlb';
-                    badgeText = 'FDLB';
-                } else if (legume.producteur === 'Géoferme') {
-                    producteurClass = 'gf';
-                    badgeClass = 'gf';
-                    badgeText = 'GF';
-                } else if (legume.producteur === 'Partagé') {
-                    producteurClass = 'partage';
-                    badgeClass = 'partage';
-                    badgeText = 'Part.';
-                } else if (legume.producteur === 'Extérieur') {
-                    producteurClass = 'exterieur';
-                    badgeClass = 'exterieur';
-                    badgeText = 'Ext.';
-                }
-                
-                div.className = `legume-list-item ${producteurClass}`;
-                div.onclick = () => showLegumeDetails(legume);
-                
-                const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
-                
-                div.innerHTML = `
-                    <div style="display: flex; align-items: center; flex: 1;">
-                        <span class="producer-badge ${badgeClass}">${badgeText}</span>
-                        <div class="legume-name-display">${legume.nom}</div>
-                    </div>
-                    <div class="legume-right-info">
-                        <div class="legume-price-display">${priceDisplay}€<span class="legume-unit-display">/${legume.unite}</span></div>
-                    </div>
-                `;
-                
-                container.appendChild(div);
-            });
-        }
-        
-        // Filtrer les légumes
-        function filterLegumes() {
-            displayLegumesList();
-        }
-        
-        // Définir le filtre
-        function setLegumeFilter(type, value) {
-            legumeFilter = { type, value };
-            
-            // Mettre à jour les boutons actifs
-            if (type === 'all') {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                event.target.classList.add('active');
-                document.querySelector('.filter-select').value = 'all';
-                document.querySelector('.filter-select').classList.remove('active');
-                document.querySelector('.filter-select').classList.remove('active');
-            } else if (type === 'producteur') {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                event.target.classList.add('active');
-                document.querySelector('.filter-select').value = 'all';
-            } else if (type === 'type') {
-                document.querySelectorAll('.filter-btn').forEach((btn, index) => {
-                    if (index === 0) {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // Gérer la classe active du select
-                const select = document.querySelector('.filter-select');
-                if (value === 'all') {
-                    select.classList.remove('active');
-                    document.querySelectorAll('.filter-btn')[0].classList.add('active');
-                } else {
-                    select.classList.add('active');
-                }
-            }
-            
-            displayLegumesList();
-        }
-        
-        // Afficher les détails d'un légume
-        function showLegumeDetails(legume) {
-            const panel = document.getElementById('legumeDetailsPanel');
-            const content = document.getElementById('legumeDetailsContent');
-            
-            // Stocker le légume actuel pour l'édition
-            window.currentDetailLegume = legume;
-            
-            const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
-            
-            content.innerHTML = `
-                <div style="padding: 15px 20px 10px; margin-bottom: 10px;">
-                    <button class="edit-legume-btn" onclick="editLegume(window.currentDetailLegume)" style="width: 100%;">
-                        ✏️ Modifier
-                    </button>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Nom</div>
-                    <div class="client-detail-value">${legume.nom}</div>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Unité</div>
-                    <div class="client-detail-value">${legume.unite}</div>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Prix/Unité</div>
-                    <div class="client-detail-value" style="font-weight: bold; color: #333;">
-                        ${priceDisplay} €/${legume.unite}
-                    </div>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Producteur</div>
-                    <div class="client-detail-value">${legume.producteur}</div>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Type</div>
-                    <div class="client-detail-value">${legume.type || 'Non spécifié'}</div>
-                </div>
-                <div class="client-detail-row">
-                    <div class="client-detail-label">Commentaires</div>
-                    <div class="client-detail-value">${legume.commentaires || 'Aucun commentaire'}</div>
-                </div>
-            `;
-            
-            panel.classList.remove('hidden');
-            setTimeout(() => panel.classList.add('show'), 10);
-        }
-        
-        // Masquer les détails
-        function hideLegumeDetails() {
-            const panel = document.getElementById('legumeDetailsPanel');
-            panel.classList.remove('show');
-            setTimeout(() => panel.classList.add('hidden'), 300);
-        }
-        
-        // Afficher le formulaire légume
-        function showLegumeForm(legume = null) {
-            const overlay = document.getElementById('legumeFormOverlay');
-            const title = document.getElementById('legumeFormTitle');
-            const form = document.getElementById('legumeForm');
-            
-            if (legume) {
-                title.textContent = 'Modifier le légume';
-                document.getElementById('legumeIndex').value = legume.index;
-                document.getElementById('legumeNom').value = legume.nom;
-                document.getElementById('legumeUnite').value = legume.unite;
-                document.getElementById('legumePrix').value = legume.prix.toFixed(2);
-                document.getElementById('legumeProducteur').value = legume.producteur;
-                document.getElementById('legumeType').value = legume.type || '';
-                document.getElementById('legumeCommentaires').value = legume.commentaires || '';
-            } else {
-                title.textContent = 'Nouveau légume';
-                form.reset();
-                document.getElementById('legumeIndex').value = '-1';
-            }
-            
-            overlay.classList.remove('hidden');
-        }
-        
-        // Éditer un légume
-        function editLegume(legume) {
-            hideLegumeDetails();
-            showLegumeForm(legume);
-        }
-        
-        // Masquer le formulaire
-        function hideLegumeForm(event) {
-            if (!event || event.target.id === 'legumeFormOverlay') {
-                document.getElementById('legumeFormOverlay').classList.add('hidden');
-            }
-        }
-        
-        // Sauvegarder un légume
-        async function saveLegume(event) {
-            event.preventDefault();
-            
-            const index = parseInt(document.getElementById('legumeIndex').value);
-            const nom = document.getElementById('legumeNom').value.trim();
-            const unite = document.getElementById('legumeUnite').value;
-            const prix = document.getElementById('legumePrix').value;
-            const producteur = document.getElementById('legumeProducteur').value;
-            const type = document.getElementById('legumeType').value.trim();
-            const commentaires = document.getElementById('legumeCommentaires').value.trim();
-            
-            // Vérifier les doublons
