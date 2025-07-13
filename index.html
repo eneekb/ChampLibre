@@ -1901,6 +1901,145 @@
             }
         }
         }
+        
+        /* Animation de chargement */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .solar-system {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .solar-system .sun {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #5A9041;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(90, 144, 65, 0.5);
+        }
+
+        .solar-system .orbit-path {
+            position: absolute;
+            border: 1px dashed rgba(144, 207, 3, 0.2);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .solar-system .orbit-path.small {
+            width: 35px;
+            height: 35px;
+        }
+
+        .solar-system .orbit-path.medium {
+            width: 55px;
+            height: 55px;
+        }
+
+        .solar-system .orbit-path.large {
+            width: 75px;
+            height: 75px;
+        }
+
+        .solar-system .planet-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .solar-system .planet-container.small {
+            width: 35px;
+            height: 35px;
+            animation: orbit 0.7s linear infinite;
+        }
+
+        .solar-system .planet-container.medium {
+            width: 55px;
+            height: 55px;
+            animation: orbit-reverse 1s linear infinite;
+        }
+
+        .solar-system .planet-container.large {
+            width: 75px;
+            height: 75px;
+            animation: orbit 1.4s linear infinite;
+        }
+
+        .solar-system .planet {
+            position: absolute;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            margin-top: -4px;
+            margin-left: -4px;
+        }
+
+        .solar-system .planet.small {
+            width: 6px;
+            height: 6px;
+            background: #90CF03;
+            margin-top: -3px;
+            margin-left: -3px;
+        }
+
+        .solar-system .planet.medium {
+            width: 8px;
+            height: 8px;
+            background: #FF7700;
+        }
+
+        .solar-system .planet.large {
+            width: 10px;
+            height: 10px;
+            background: #5A9041;
+            margin-top: -5px;
+            margin-left: -5px;
+        }
+
+        @keyframes orbit {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-reverse {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        .loading-text {
+            color: #5A9041;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            margin: 0;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -1950,7 +2089,6 @@
                 </div>
                 <h1 class="login-title">ChampLibre</h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
-                <div id="loginStatus" class="status hidden" style="margin-bottom: 20px;"></div>
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
                     Se connecter avec Google
                 </button>
@@ -1973,8 +2111,6 @@
 
         <!-- Contenu principal (caché au départ) -->
         <div id="mainContent" class="hidden">
-            <div id="status" class="status hidden"></div>
-
             <!-- Section Accueil -->
             <div id="home" class="section active">
                 <div class="home-grid">
@@ -2318,6 +2454,52 @@
         const dateStr = today.toLocaleDateString('fr-FR');
         document.getElementById('dateInfo').textContent = dateStr;
 
+        // Fonctions d'animation de chargement
+        function showLoading(message = 'Chargement en cours...') {
+            // Supprimer toute animation existante
+            hideLoading();
+            
+            // Créer l'overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.id = 'loadingOverlay';
+            
+            // Créer le container
+            const container = document.createElement('div');
+            container.className = 'loading-container';
+            
+            // HTML de l'animation
+            container.innerHTML = `
+                <div class="solar-system">
+                    <div class="sun"></div>
+                    <div class="orbit-path small"></div>
+                    <div class="orbit-path medium"></div>
+                    <div class="orbit-path large"></div>
+                    <div class="planet-container small">
+                        <div class="planet small"></div>
+                    </div>
+                    <div class="planet-container medium">
+                        <div class="planet medium"></div>
+                    </div>
+                    <div class="planet-container large">
+                        <div class="planet large"></div>
+                    </div>
+                </div>
+                <div class="loading-text">${message}</div>
+            `;
+            
+            overlay.appendChild(container);
+            document.body.appendChild(overlay);
+        }
+
+        // Masquer l'animation de chargement
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
         // Navigation
         function showSection(sectionName) {
             // Fermer les panneaux ouverts
@@ -2422,20 +2604,17 @@
             if (hasTriedAutoConnect) return;
             hasTriedAutoConnect = true;
             
-            const loginStatus = document.getElementById('loginStatus');
             const authorizeBtn = document.getElementById('authorizeBtn');
             
             // Désactiver le bouton pendant la tentative
             authorizeBtn.disabled = true;
             authorizeBtn.textContent = 'Connexion automatique...';
             
-            loginStatus.textContent = 'Reconnexion en cours...';
-            loginStatus.className = 'status loading';
-            loginStatus.classList.remove('hidden');
+            showLoading('Reconnexion en cours...');
             
             // Timeout de sécurité au cas où il n'y a pas de réponse
             const timeout = setTimeout(() => {
-                loginStatus.classList.add('hidden');
+                hideLoading();
                 authorizeBtn.disabled = false;
                 authorizeBtn.textContent = 'Se connecter avec Google';
             }, 5000);
@@ -2445,7 +2624,7 @@
                 
                 if (resp.error !== undefined) {
                     // Échec de la connexion automatique
-                    loginStatus.classList.add('hidden');
+                    hideLoading();
                     authorizeBtn.disabled = false;
                     authorizeBtn.textContent = 'Se connecter avec Google';
                     return;
@@ -2460,10 +2639,8 @@
                     });
                     
                     // Connexion automatique réussie
-                    loginStatus.textContent = 'Connexion réussie!';
-                    loginStatus.className = 'status success';
+                    hideLoading();
                     setTimeout(() => {
-                        loginStatus.classList.add('hidden');
                         showMainInterface();
                     }, 500);
                     
@@ -2475,7 +2652,7 @@
                     }
                 } catch (err) {
                     // Token invalide ou expiré
-                    loginStatus.classList.add('hidden');
+                    hideLoading();
                     authorizeBtn.disabled = false;
                     authorizeBtn.textContent = 'Se connecter avec Google';
                     gapi.client.setToken('');
@@ -2489,31 +2666,26 @@
         }
 
         function handleAuthClick() {
-            const loginStatus = document.getElementById('loginStatus');
-            loginStatus.textContent = 'Connexion en cours...';
-            loginStatus.className = 'status loading';
-            loginStatus.classList.remove('hidden');
+            showLoading('Connexion en cours...');
             
             tokenClient.callback = async (resp) => {
                 if (resp.error !== undefined) {
                     // Si l'erreur est "immediate_failed", essayer avec prompt
                     if (resp.error === 'immediate_failed') {
-                        loginStatus.textContent = 'Autorisation requise...';
+                        showLoading('Autorisation requise...');
                         tokenClient.requestAccessToken({prompt: 'consent'});
                         return;
                     }
                     
-                    loginStatus.textContent = 'Erreur de connexion. Veuillez réessayer.';
-                    loginStatus.className = 'status error';
+                    hideLoading();
+                    alert('Erreur de connexion. Veuillez réessayer.');
                     console.error('Erreur auth:', resp);
                     return;
                 }
                 
                 // Connexion réussie
-                loginStatus.textContent = 'Connexion réussie!';
-                loginStatus.className = 'status success';
+                hideLoading();
                 setTimeout(() => {
-                    loginStatus.classList.add('hidden');
                     showMainInterface();
                 }, 500);
                 
@@ -2548,17 +2720,6 @@
                 if (userFirstName) {
                     document.getElementById('userInfo').innerHTML = '👤 ' + userFirstName;
                 }
-                
-                // Message de succès
-                const status = document.getElementById('status');
-                status.textContent = 'Connecté avec succès!';
-                status.className = 'status success';
-                status.classList.remove('hidden');
-                
-                // Masquer le message après 3 secondes
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
             }, 3000);
         }
         
@@ -2629,19 +2790,13 @@
                 userFirstName = '';
                 legumeFilter = { type: 'all', value: 'all' };
                 document.getElementById('userInfo').innerHTML = '';
-                
-                // Masquer le statut de connexion
-                document.getElementById('loginStatus').classList.add('hidden');
             }
         }
 
         // Fonctions Distribution
         async function loadClients() {
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Chargement des clients...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Chargement des clients...');
                 
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
@@ -2661,20 +2816,14 @@
                         }));
                     
                     displayClients();
-                    status.textContent = `${clients.length} clients chargés`;
-                    status.className = 'status success';
-                    setTimeout(() => {
-                        status.classList.add('hidden');
-                    }, 3000);
+                    hideLoading();
                 } else {
-                    status.textContent = 'Aucun client trouvé';
-                    status.className = 'status error';
+                    hideLoading();
+                    alert('Aucun client trouvé');
                 }
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
@@ -2683,10 +2832,7 @@
         // Charger tous les clients pour la gestion
         async function loadAllClients() {
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Chargement des clients...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Chargement des clients...');
                 
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
@@ -2707,17 +2853,11 @@
                 }));
                 
                 displayClientsList();
-                status.textContent = `${allClients.length} clients chargés`;
-                status.className = 'status success';
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
+                hideLoading();
                 
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
@@ -2971,10 +3111,7 @@
             }
             
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Enregistrement...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Enregistrement en cours...');
                 
                 const values = [[
                     nom,
@@ -3005,20 +3142,13 @@
                     });
                 }
                 
-                status.textContent = 'Client enregistré avec succès !';
-                status.className = 'status success';
+                hideLoading();
                 hideClientForm();
                 await loadAllClients();
                 
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
-                
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
@@ -3032,10 +3162,7 @@
         // Charger tous les légumes
         async function loadAllLegumes() {
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Chargement des légumes...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Chargement des légumes...');
                 
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
@@ -3057,17 +3184,11 @@
                 updateTypeFilter();
                 
                 displayLegumesList();
-                status.textContent = `${allLegumes.length} légumes chargés`;
-                status.className = 'status success';
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
+                hideLoading();
                 
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
@@ -3334,10 +3455,7 @@
             }
             
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Enregistrement...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Enregistrement en cours...');
                 
                 const values = [[
                     nom,
@@ -3366,20 +3484,13 @@
                     });
                 }
                 
-                status.textContent = 'Légume enregistré avec succès !';
-                status.className = 'status success';
+                hideLoading();
                 hideLegumeForm();
                 await loadAllLegumes();
                 
-                setTimeout(() => {
-                    status.classList.add('hidden');
-                }, 3000);
-                
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
 
@@ -3443,10 +3554,7 @@
 
         async function saveDistribution() {
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Enregistrement...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Enregistrement de la distribution...');
                 
                 const values = [];
                 const dateISO = today.toISOString().split('T')[0];
@@ -3466,8 +3574,8 @@
                 });
                 
                 if (values.length === 0) {
-                    status.textContent = 'Aucune donnée à enregistrer';
-                    status.className = 'status error';
+                    hideLoading();
+                    alert('Aucune donnée à enregistrer');
                     return;
                 }
                 
@@ -3481,21 +3589,18 @@
                     }
                 });
                 
-                status.textContent = `✓ Distribution enregistrée (${values.length} clients)`;
-                status.className = 'status success';
+                hideLoading();
+                alert(`✓ Distribution enregistrée (${values.length} clients)`);
                 
-                // Réinitialiser après 3 secondes
+                // Réinitialiser après 1 seconde
                 setTimeout(() => {
                     distributionStatus = {};
                     displayClients();
-                    status.classList.add('hidden');
-                }, 3000);
+                }, 1000);
                 
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
@@ -3644,10 +3749,7 @@
             updateNavigationButtons();
             
             try {
-                const status = document.getElementById('status');
-                status.textContent = 'Chargement de la composition...';
-                status.className = 'status loading';
-                status.classList.remove('hidden');
+                showLoading('Chargement de la composition...');
                 
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
@@ -3663,13 +3765,11 @@
                 
                 displayWeekComposition(weekData);
                 
-                status.classList.add('hidden');
+                hideLoading();
                 
             } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Erreur: ' + err.message;
-                status.className = 'status error';
-                status.classList.remove('hidden');
+                hideLoading();
+                alert('Erreur: ' + err.message);
             }
         }
         
