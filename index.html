@@ -3,18 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ChampLibre v4.0 - Laissez le champ libre à votre collaboration</title>
+    <title>ChampLibre v5.0 - Laissez le champ libre à votre collaboration</title>
     <style>
         * {
             box-sizing: border-box;
         @media (max-width: 480px) {
             .vegetable-cards {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .filter-buttons .filter-btn {
-                padding: 4px 8px;
-                font-size: 12px;
             }
         }
         
@@ -793,7 +788,7 @@
         }
         
         .legume-list-item {
-            padding: 8px 12px 8px 15px;
+            padding: 8px 12px;
             border-bottom: 1px solid #eee;
             border-left: 3px solid transparent;
             cursor: pointer;
@@ -801,7 +796,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
         }
         
         .legume-list-item:last-child {
@@ -810,7 +804,7 @@
         
         @media (min-width: 768px) {
             .legume-list-item {
-                padding: 10px 15px 10px 15px;
+                padding: 10px 15px;
             }
         }
         
@@ -820,77 +814,12 @@
             border-left-width: 4px;
         }
         
-        .legume-list-item.partage:hover {
-            border-left: none;
-        }
-        
-        .legume-list-item.partage:hover::before {
-            width: 4px;
-        }
-        
-        // Ferme de la Brissonnerie : couleur #5A9041 (vert foncé)
-        // Géoferme : couleur #90CF03 (vert clair)
-        // Partagé : moitié des deux verts
-        // Extérieur : gris
-        
         .legume-list-item.brissonnerie {
             border-left-color: #5A9041;
         }
         
         .legume-list-item.geoferme {
-            border-left-color: #90CF03;
-        }
-        
-        .legume-list-item.partage {
-            position: relative;
-            border-left: none;
-        }
-        
-        .legume-list-item.partage::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(to bottom, #5A9041 0%, #5A9041 50%, #90CF03 50%, #90CF03 100%);
-        }
-        
-        .legume-list-item.exterieur {
-            border-left-color: #ccc;
-        }
-        
-        .legume-producteur-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 22px;
-            text-align: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: white;
-            border-radius: 3px;
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-        
-        .legume-producteur-badge.fdlb {
-            background: #5A9041;
-        }
-        
-        .legume-producteur-badge.gf {
-            background: #90CF03;
-            color: #2d4a00;
-        }
-        
-        .legume-producteur-badge.part {
-            background: linear-gradient(to right, #5A9041 0%, #5A9041 50%, #90CF03 50%, #90CF03 100%);
-        }
-        
-        .legume-producteur-badge.ext {
-            background: #ccc;
-            color: #333;
+            border-left-color: #FF7700;
         }
         
         .legume-name-display {
@@ -924,29 +853,13 @@
         
         @media (max-width: 768px) {
             .legume-list-item {
-                padding: 6px 10px 6px 12px;
+                padding: 6px 10px;
                 border-left-width: 2px;
-            }
-            
-            .legume-list-item.partage {
-                border-left: none;
-            }
-            
-            .legume-list-item.partage::before {
-                width: 2px;
             }
             
             .legume-list-item:hover {
                 padding-left: 12px;
                 border-left-width: 3px;
-            }
-            
-            .legume-list-item.partage:hover {
-                border-left: none;
-            }
-            
-            .legume-list-item.partage:hover::before {
-                width: 3px;
             }
             
             .legume-name-display {
@@ -973,13 +886,6 @@
             .filter-buttons {
                 margin-top: -5px;
                 flex-wrap: wrap;
-            }
-            
-            .legume-producteur-badge {
-                width: 37px;
-                height: 18px;
-                font-size: 9px;
-                margin-right: 6px;
             }
         }
         
@@ -1796,13 +1702,12 @@
         }
         
         .vegetable-card {
-            padding: 10px 10px 10px 16px;
+            padding: 10px;
             border-radius: 6px;
             border: 1px solid rgba(0,0,0,0.08);
             transition: all 0.2s ease;
             cursor: pointer;
             background: white;
-            position: relative;
         }
         
         .vegetable-card:hover {
@@ -1815,15 +1720,7 @@
         }
         
         .vegetable-card.principal:hover {
-            box-shadow: 0 3px 8px rgba(144, 207, 3, 0.25);
-        }
-        
-        .vegetable-card.partage:hover {
-            box-shadow: 0 3px 8px rgba(117, 175, 50, 0.25);
-        }
-        
-        .vegetable-card.exterieur:hover {
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 3px 8px rgba(255, 119, 0, 0.25);
         }
         
         .vegetable-card.tibere {
@@ -1832,30 +1729,8 @@
         }
         
         .vegetable-card.principal {
-            border: 1.5px solid #90CF03;
-            border-left: 4px solid #90CF03;
-        }
-        
-        .vegetable-card.partage {
-            border: 1.5px solid #777;
-            border-left: none;
-            position: relative;
-        }
-        
-        .vegetable-card.partage::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(to bottom, #5A9041 0%, #5A9041 50%, #90CF03 50%, #90CF03 100%);
-            border-radius: 5px 0 0 5px;
-        }
-        
-        .vegetable-card.exterieur {
-            border: 1.5px solid #ddd;
-            border-left: 4px solid #ddd;
+            border: 1.5px solid #FF7700;
+            border-left: 4px solid #FF7700;
         }
         
         .vegetable-name {
@@ -1891,15 +1766,7 @@
         }
         
         .vegetable-card.principal .vegetable-price {
-            color: #6b9600;
-        }
-        
-        .vegetable-card.partage .vegetable-price {
-            color: #777;
-        }
-        
-        .vegetable-card.exterieur .vegetable-price {
-            color: #666;
+            color: #FF7700;
         }
         
         .vegetable-card.tibere .vegetable-price {
@@ -1979,12 +1846,7 @@
             
         @media (max-width: 768px) {
             .vegetable-card {
-                padding: 7px 7px 7px 13px;
-            }
-            
-            .vegetable-card.partage::before {
-                width: 3px;
-                border-radius: 5px 0 0 5px;
+                padding: 7px;
             }
             
             .vegetable-name {
@@ -2017,7 +1879,7 @@
             <img src="logo ChampLibre.png" alt="ChampLibre" class="header-logo">
             <div>
                 ChampLibre<br>
-                <span class="app-version">v4.0</span>
+                <span class="app-version">v5.0</span>
             </div>
         </div>
         <button class="signout-btn-header" onclick="handleSignoutClick()">
@@ -2061,7 +1923,7 @@
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
                     Se connecter avec Google
                 </button>
-                <div class="version-text">Version 4.0</div>
+                <div class="version-text">Version 5.0</div>
             </div>
         </div>
         
@@ -2074,7 +1936,7 @@
                 <h1 class="login-title">ChampLibre</h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
                 <h2 id="welcomeMessage" class="welcome-message">Bonjour !</h2>
-                <div class="version-text">Version 4.0</div>
+                <div class="version-text">Version 5.0</div>
             </div>
         </div>
 
@@ -2218,10 +2080,8 @@
                     </div>
                     <div class="filter-buttons">
                         <button class="filter-btn active" onclick="setLegumeFilter('all', 'all')">Tous</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Ferme de la Brissonnerie')">FDLB</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Géoferme')">GF</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Partagé')">Part.</button>
-                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Extérieur')">Ext.</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Ferme de la Brissonnerie')">Brissonnerie</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Géoferme')">Géoferme</button>
                         <select class="filter-select" id="typeFilterSelect" onchange="setLegumeFilter('type', this.value)">
                             <option value="all">Tous les types</option>
                             <!-- Sera rempli dynamiquement -->
@@ -2269,8 +2129,6 @@
                                     <option value="">Sélectionnez un producteur</option>
                                     <option value="Ferme de la Brissonnerie">Ferme de la Brissonnerie</option>
                                     <option value="Géoferme">Géoferme</option>
-                                    <option value="Partagé">Partagé</option>
-                                    <option value="Extérieur">Extérieur</option>
                                 </select>
                             </div>
                             
@@ -2385,7 +2243,7 @@
 
     <script>
         // Configuration
-        const APP_VERSION = '4.0';
+        const APP_VERSION = '5.0';
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
         const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
@@ -2393,7 +2251,7 @@
         // Structure du Google Sheet:
         // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
-        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie", "Géoferme", "Partagé" ou "Extérieur"), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
+        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie" ou "Géoferme" exactement), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
         // Feuille "Légumes": A=Nom, B=Unité, C=Prix/Unité, D=Producteur, E=Type, F=Commentaires
         
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
@@ -3226,46 +3084,14 @@
             
             filteredLegumes.forEach((legume) => {
                 const div = document.createElement('div');
-                
-                // Déterminer la classe du producteur
-                let producteurClass = '';
-                let producteurAbbr = '';
-                if (legume.producteur === 'Ferme de la Brissonnerie') {
-                    producteurClass = 'brissonnerie';
-                    producteurAbbr = 'FDLB';
-                } else if (legume.producteur === 'Géoferme') {
-                    producteurClass = 'geoferme';
-                    producteurAbbr = 'GF';
-                } else if (legume.producteur === 'Partagé') {
-                    producteurClass = 'partage';
-                    producteurAbbr = 'Part.';
-                } else if (legume.producteur === 'Extérieur') {
-                    producteurClass = 'exterieur';
-                    producteurAbbr = 'Ext.';
-                }
-                
+                const producteurClass = legume.producteur.toLowerCase().includes('brissonnerie') ? 'brissonnerie' : 'geoferme';
                 div.className = `legume-list-item ${producteurClass}`;
                 div.onclick = () => showLegumeDetails(legume);
                 
                 const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
                 
-                // Déterminer la classe CSS du badge
-                let badgeClass = '';
-                if (producteurClass === 'brissonnerie') {
-                    badgeClass = 'fdlb';
-                } else if (producteurClass === 'geoferme') {
-                    badgeClass = 'gf';
-                } else if (producteurClass === 'partage') {
-                    badgeClass = 'part';
-                } else if (producteurClass === 'exterieur') {
-                    badgeClass = 'ext';
-                }
-                
                 div.innerHTML = `
-                    <div style="display: flex; align-items: center; flex: 1;">
-                        <span class="legume-producteur-badge ${badgeClass}">${producteurAbbr}</span>
-                        <div class="legume-name-display">${legume.nom}</div>
-                    </div>
+                    <div class="legume-name-display">${legume.nom}</div>
                     <div class="legume-right-info">
                         <div class="legume-price-display">${priceDisplay}€<span class="legume-unit-display">/${legume.unite}</span></div>
                     </div>
@@ -3329,14 +3155,6 @@
             
             const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
             
-            // Déterminer la couleur du prix selon le producteur
-            let priceColor = '#333';
-            if (legume.producteur === 'Ferme de la Brissonnerie') {
-                priceColor = '#5A9041';
-            } else if (legume.producteur === 'Géoferme') {
-                priceColor = '#6b9600';
-            }
-            
             content.innerHTML = `
                 <div style="padding: 15px 20px 10px; margin-bottom: 10px;">
                     <button class="edit-legume-btn" onclick="editLegume(window.currentDetailLegume)" style="width: 100%;">
@@ -3353,7 +3171,7 @@
                 </div>
                 <div class="client-detail-row">
                     <div class="client-detail-label">Prix/Unité</div>
-                    <div class="client-detail-value" style="font-weight: bold; color: ${priceColor};">
+                    <div class="client-detail-value" style="font-weight: bold; color: ${legume.producteur.includes('Brissonnerie') ? '#5A9041' : '#FF7700'};">
                         ${priceDisplay} €/${legume.unite}
                     </div>
                 </div>
@@ -3820,12 +3638,6 @@
                     } else if (producteurLower === 'géoferme' || producteurLower === 'geoferme') {
                         cardClass += ' principal';
                         isValidProducer = true;
-                    } else if (producteurLower === 'partagé' || producteurLower === 'partage') {
-                        cardClass += ' partage';
-                        isValidProducer = true;
-                    } else if (producteurLower === 'extérieur' || producteurLower === 'exterieur') {
-                        cardClass += ' exterieur';
-                        isValidProducer = true;
                     }
                 }
                 
@@ -3853,13 +3665,6 @@
                     totalTibere += price;
                 } else if (cardClass.includes('principal')) {
                     totalPrincipal += price;
-                } else if (cardClass.includes('partage')) {
-                    // Pour le partagé, on répartit 50/50
-                    totalTibere += price / 2;
-                    totalPrincipal += price / 2;
-                } else if (cardClass.includes('exterieur')) {
-                    // Pour l'extérieur, on peut le compter à part ou l'ignorer
-                    // Pour l'instant on l'ignore dans les totaux
                 }
             });
             
