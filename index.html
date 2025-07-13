@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -446,6 +447,7 @@
         }
         
         .home-card.clients { background: #90CF03; }
+        .home-card.legumes { background: #90CF03; }
         .home-card.paniers { background: #90CF03; }
         .home-card.distribution { background: #90CF03; }
         .home-card.stats { background: #90CF03; }
@@ -691,6 +693,275 @@
         
         .hidden {
             display: none !important;
+        }
+        
+        /* Styles pour la section Légumes (similaires aux Clients) */
+        .legumes-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .legumes-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+        }
+        
+        .add-legume-btn-small {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 36px;
+            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
+        }
+        
+        @media (min-width: 768px) {
+            .add-legume-btn-small {
+                padding: 8px 14px;
+                min-width: 40px;
+            }
+        }
+        
+        .add-legume-btn-small:hover {
+            background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(255, 119, 0, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .add-legume-btn-small {
+                font-size: 18px;
+            }
+        }
+        
+        .filter-select {
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            outline: none;
+        }
+        
+        .filter-select:hover {
+            border-color: #90CF03;
+            color: #5A9041;
+        }
+        
+        .filter-select:focus {
+            border-color: #5A9041;
+            box-shadow: 0 0 0 3px rgba(144, 207, 3, 0.1);
+        }
+        
+        @media (min-width: 768px) {
+            .filter-select {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+        
+        .filter-select.active {
+            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
+            color: white;
+            border-color: #5A9041;
+            box-shadow: 0 2px 4px rgba(90, 144, 65, 0.3);
+        }
+        
+        .legumes-list-container {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .legume-list-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .legume-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        @media (min-width: 768px) {
+            .legume-list-item {
+                padding: 10px 15px;
+            }
+        }
+        
+        .legume-list-item:hover {
+            background: linear-gradient(to right, #f8f9fa 0%, #f0f1f2 100%);
+            padding-left: 15px;
+            border-left-width: 4px;
+        }
+        
+        .legume-list-item.brissonnerie {
+            border-left-color: #5A9041;
+        }
+        
+        .legume-list-item.geoferme {
+            border-left-color: #FF7700;
+        }
+        
+        .legume-name-display {
+            font-weight: 500;
+            font-size: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .legume-right-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legume-price-display {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: #333;
+        }
+        
+        .legume-unit-display {
+            font-size: 12px;
+            color: #666;
+            margin-left: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .legume-list-item {
+                padding: 6px 10px;
+                border-left-width: 2px;
+            }
+            
+            .legume-list-item:hover {
+                padding-left: 12px;
+                border-left-width: 3px;
+            }
+            
+            .legume-name-display {
+                font-size: 14px;
+                margin-right: 8px;
+            }
+            
+            .legume-price-display {
+                font-size: 13px;
+            }
+            
+            .legume-unit-display {
+                font-size: 11px;
+            }
+            
+            .legume-right-info {
+                gap: 6px;
+            }
+            
+            .legumes-list-container {
+                max-height: calc(100vh - 240px);
+            }
+            
+            .filter-buttons {
+                margin-top: -5px;
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Formulaire légume popup */
+        .legume-form-popup {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(90, 144, 65, 0.1);
+        }
+        
+        @media (min-width: 768px) {
+            .legume-form-popup {
+                padding: 30px;
+            }
+        }
+        
+        .legume-form-popup h2 {
+            margin-top: 0;
+            color: #5A9041;
+        }
+        
+        /* Panneau de détails légume */
+        .legume-details-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 500;
+            overflow-y: auto;
+            display: block !important;
+            pointer-events: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .legume-details-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        
+        .legume-details-panel.show {
+            right: 0;
+        }
+        
+        .legume-details-panel.hidden {
+            display: none !important;
+        }
+        
+        .edit-legume-btn {
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
+            width: 100%;
+        }
+        
+        .edit-legume-btn:hover {
+            background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(255, 119, 0, 0.4);
         }
         
         /* Placeholder pour les sections vides */
@@ -1029,7 +1300,8 @@
         }
         
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -1039,10 +1311,16 @@
         }
         
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #5A9041;
             box-shadow: 0 0 0 3px rgba(144, 207, 3, 0.1);
+        }
+        
+        .form-group select {
+            background: white;
+            cursor: pointer;
         }
         
         .checkbox-label {
@@ -1305,7 +1583,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .summary-total h3 {
@@ -1333,23 +1611,69 @@
             height: auto;
         }
         
-        .edit-basket-btn {
-            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 7px 20px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.25);
-            width: 100%;
+        .basket-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
         }
         
-        .edit-basket-btn:hover {
+        .basket-action-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .basket-action-btn.edit-btn {
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
+            color: white;
+        }
+        
+        .basket-action-btn.edit-btn:hover {
             background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
             box-shadow: 0 3px 6px rgba(255, 119, 0, 0.35);
+        }
+        
+        .basket-action-btn.new-week-btn {
+            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
+            color: white;
+        }
+        
+        .basket-action-btn.new-week-btn:hover {
+            background: linear-gradient(135deg, #4A7A35 0%, #3A6A25 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(90, 144, 65, 0.35);
+        }
+        
+        .basket-action-btn:hover {
+            transform: translateY(-1px) scale(1.05);
+        }
+        
+        .basket-action-btn.new-week-btn:hover {
+            transform: translateY(-1px) scale(1.05);
+        }
+        
+        .basket-action-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        .basket-action-btn.edit-btn:active {
+            background: linear-gradient(135deg, #CC5500 0%, #B34A00 100%);
+        }
+        
+        .basket-action-btn.new-week-btn:active {
+            background: linear-gradient(135deg, #3A6A25 0%, #2A5A15 100%);
         }
         
         .vegetable-cards {
@@ -1362,6 +1686,12 @@
             .vegetable-cards {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
+            }
+            
+            .basket-action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
             }
         }
         
@@ -1420,10 +1750,24 @@
             text-overflow: ellipsis;
         }
         
+        .vegetable-quantity {
+            font-weight: bold;
+            color: #000;
+            opacity: 1;
+        }
+        
         .vegetable-price {
             font-weight: bold;
             margin-top: 2px;
             font-size: 14px;
+        }
+        
+        .vegetable-card.tibere .vegetable-price {
+            color: #5A9041;
+        }
+        
+        .vegetable-card.principal .vegetable-price {
+            color: #FF7700;
         }
         
         .vegetable-card.tibere .vegetable-price {
@@ -1462,7 +1806,7 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 8px;
+                margin-bottom: 6px;
             }
             
             .summary-total {
@@ -1486,9 +1830,14 @@
                 height: 75px;
             }
             
-            .edit-basket-btn {
-                padding: 6px 18px;
-                font-size: 14px;
+            .basket-actions {
+                gap: 6px;
+            }
+            
+            .basket-action-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
             }
             
             #paniers .section-header {
@@ -1510,6 +1859,10 @@
                 font-size: 9px;
                 white-space: normal;
                 word-break: break-all;
+            }
+            
+            .vegetable-quantity {
+                font-size: 10px;
             }
             
             .vegetable-price {
@@ -1550,7 +1903,8 @@
                     </div>
                 </a>
                 <a class="nav-item" onclick="showSection('clients')" title="Clients">👨‍👩‍👧‍👦</a>
-                <a class="nav-item" onclick="showSection('paniers')" title="Composition">🥕</a>
+                <a class="nav-item" onclick="showSection('legumes')" title="Légumes">🥕</a>
+                <a class="nav-item" onclick="showSection('paniers')" title="Composition">📋</a>
                 <a class="nav-item" onclick="showSection('distribution')" title="Distribution">📦</a>
                 <a class="nav-item" onclick="showSection('stats')" title="Statistiques">📊</a>
             </div>
@@ -1599,8 +1953,13 @@
                         <div class="home-card-title">Clients</div>
                     </div>
                     
-                    <div class="home-card paniers" onclick="showSection('paniers')">
+                    <div class="home-card legumes" onclick="showSection('legumes')">
                         <div class="home-card-icon">🥕</div>
+                        <div class="home-card-title">Légumes</div>
+                    </div>
+                    
+                    <div class="home-card paniers" onclick="showSection('paniers')">
+                        <div class="home-card-icon">📋</div>
                         <div class="home-card-title">Composition</div>
                     </div>
                     
@@ -1708,10 +2067,106 @@
                 </div>
             </div>
 
+            <!-- Section Légumes -->
+            <div id="legumes" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">🥕 Gestion des Légumes</h1>
+                </div>
+                
+                <!-- Barre de recherche et filtres -->
+                <div class="legumes-controls">
+                    <div class="search-add-container">
+                        <input type="text" id="searchLegumes" class="search-input" placeholder="🔍 Rechercher un légume..." onkeyup="filterLegumes()">
+                        <button class="add-legume-btn-small" onclick="showLegumeForm()" title="Ajouter un légume">+</button>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="setLegumeFilter('all', 'all')">Tous</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Ferme de la Brissonnerie')">Brissonnerie</button>
+                        <button class="filter-btn" onclick="setLegumeFilter('producteur', 'Géoferme')">Géoferme</button>
+                        <select class="filter-select" id="typeFilterSelect" onchange="setLegumeFilter('type', this.value)">
+                            <option value="all">Tous les types</option>
+                            <!-- Sera rempli dynamiquement -->
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Liste des légumes -->
+                <div id="legumesListContainer" class="legumes-list-container">
+                    <!-- Sera rempli dynamiquement -->
+                </div>
+                
+                <!-- Formulaire légume (popup) -->
+                <div id="legumeFormOverlay" class="overlay hidden" onclick="hideLegumeForm(event)">
+                    <div class="legume-form-popup" onclick="event.stopPropagation()">
+                        <h2 id="legumeFormTitle">Nouveau Légume</h2>
+                        <form id="legumeForm" onsubmit="saveLegume(event)">
+                            <input type="hidden" id="legumeIndex" value="-1">
+                            
+                            <div class="form-group">
+                                <label>Nom *</label>
+                                <input type="text" id="legumeNom" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Unité *</label>
+                                <select id="legumeUnite" required>
+                                    <option value="">Sélectionnez une unité</option>
+                                    <option value="Kg">Kg</option>
+                                    <option value="Pièce">Pièce</option>
+                                    <option value="Botte">Botte</option>
+                                    <option value="Barquette">Barquette</option>
+                                    <option value="Sachet">Sachet</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Prix/Unité (€) *</label>
+                                <input type="number" id="legumePrix" step="0.01" min="0" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Producteur *</label>
+                                <select id="legumeProducteur" required>
+                                    <option value="">Sélectionnez un producteur</option>
+                                    <option value="Ferme de la Brissonnerie">Ferme de la Brissonnerie</option>
+                                    <option value="Géoferme">Géoferme</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Type</label>
+                                <input type="text" id="legumeType" placeholder="Ex: Légume racine, Légume feuille...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Commentaires</label>
+                                <textarea id="legumeCommentaires" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-buttons">
+                                <button type="button" class="cancel-btn" onclick="hideLegumeForm()">Annuler</button>
+                                <button type="submit" class="submit-btn">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Détails légume (panneau latéral) -->
+                <div id="legumeDetailsPanel" class="legume-details-panel hidden">
+                    <div class="panel-header">
+                        <h3>Détails du légume</h3>
+                        <button class="close-panel-btn" onclick="hideLegumeDetails()">×</button>
+                    </div>
+                    <div id="legumeDetailsContent">
+                        <!-- Sera rempli dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
             <!-- Section Paniers -->
             <div id="paniers" class="section">
                 <div class="section-header">
-                    <h1 class="section-title">🥕 Composition des Paniers</h1>
+                    <h1 class="section-title">📋 Composition des Paniers</h1>
                 </div>
                 
                 <!-- Sélecteur de semaine -->
@@ -1734,9 +2189,14 @@
                             <canvas id="repartitionChart" width="90" height="90"></canvas>
                         </div>
                     </div>
-                    <button class="edit-basket-btn" onclick="editBasket()">
-                        ✏️ Modifier
-                    </button>
+                    <div class="basket-actions">
+                        <button class="basket-action-btn edit-btn" onclick="editBasket()" title="Modifier">
+                            ✏️
+                        </button>
+                        <button class="basket-action-btn new-week-btn" onclick="newWeek()" title="Nouvelle semaine">
+                            ➕
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Cartes de légumes -->
@@ -1793,6 +2253,7 @@
         // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
         // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie" ou "Géoferme" exactement), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
+        // Feuille "Légumes": A=Nom, B=Unité, C=Prix/Unité, D=Producteur, E=Type, F=Commentaires
         
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
         
@@ -1813,6 +2274,8 @@
         let panierItems = []; // Pour stocker les items du panier en cours
         let currentWeek = ''; // Pour stocker la semaine courante
         let userFirstName = ''; // Pour stocker le prénom de l'utilisateur
+        let allLegumes = []; // Pour la section Légumes
+        let legumeFilter = { type: 'all', value: 'all' };
         
         // Date du jour
         const today = new Date();
@@ -1829,6 +2292,13 @@
                     setTimeout(() => panel.classList.add('hidden'), 300);
                 }
                 document.getElementById('clientFormOverlay').classList.add('hidden');
+            } else if (currentSection === 'legumes') {
+                const panel = document.getElementById('legumeDetailsPanel');
+                if (panel) {
+                    panel.classList.remove('show');
+                    setTimeout(() => panel.classList.add('hidden'), 300);
+                }
+                document.getElementById('legumeFormOverlay').classList.add('hidden');
             }
             
             // Cacher toutes les sections
@@ -1846,7 +2316,8 @@
                 if (!item.classList.contains('hamburger-nav')) {
                     const itemText = item.textContent.toLowerCase();
                     if ((sectionName === 'clients' && itemText.includes('👨‍👩‍👧‍👦')) ||
-                        (sectionName === 'paniers' && itemText.includes('🥕')) ||
+                        (sectionName === 'legumes' && itemText.includes('🥕')) ||
+                        (sectionName === 'paniers' && itemText.includes('📋')) ||
                         (sectionName === 'distribution' && itemText.includes('📦')) ||
                         (sectionName === 'stats' && itemText.includes('📊'))) {
                         item.classList.add('active');
@@ -1861,6 +2332,8 @@
                 loadClients();
             } else if (sectionName === 'clients' && gapi.client.getToken() !== null) {
                 loadAllClients();
+            } else if (sectionName === 'legumes' && gapi.client.getToken() !== null) {
+                loadAllLegumes();
             } else if (sectionName === 'paniers' && gapi.client.getToken() !== null) {
                 // Initialiser le sélecteur de semaines uniquement si connecté
                 initWeekSelector();
@@ -2013,6 +2486,10 @@
                     await loadClients();
                 } else if (currentSection === 'clients') {
                     await loadAllClients();
+                } else if (currentSection === 'legumes') {
+                    await loadAllLegumes();
+                } else if (currentSection === 'legumes') {
+                    await loadAllLegumes();
                 }
             };
 
@@ -2109,9 +2586,12 @@
                 // Reset
                 showSection('home');
                 clients = [];
+                allClients = [];
+                allLegumes = [];
                 distributionStatus = {};
                 panierItems = [];
                 userFirstName = '';
+                legumeFilter = { type: 'all', value: 'all' };
                 document.getElementById('userInfo').innerHTML = '';
                 
                 // Masquer le statut de connexion
@@ -2505,6 +2985,332 @@
                 status.classList.remove('hidden');
             }
         }
+        
+        // ========== FONCTIONS LÉGUMES ==========
+        
+        // Fonction pour supprimer les accents
+        function removeAccents(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+        
+        // Charger tous les légumes
+        async function loadAllLegumes() {
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Chargement des légumes...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Légumes!A2:F100',
+                });
+                
+                const values = response.result.values || [];
+                allLegumes = values.map((row, index) => ({
+                    index: index + 2, // +2 car on commence à la ligne 2 dans Sheets
+                    nom: row[0] || '',
+                    unite: row[1] || '',
+                    prix: parseFloat(row[2]) || 0,
+                    producteur: row[3] || '',
+                    type: row[4] || '',
+                    commentaires: row[5] || ''
+                }));
+                
+                // Remplir les types uniques dans le select
+                updateTypeFilter();
+                
+                displayLegumesList();
+                status.textContent = `${allLegumes.length} légumes chargés`;
+                status.className = 'status success';
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
+        
+        // Mettre à jour le filtre de types
+        function updateTypeFilter() {
+            const select = document.getElementById('typeFilterSelect');
+            const types = [...new Set(allLegumes.map(l => l.type).filter(t => t))];
+            
+            // Garder l'option "Tous les types"
+            select.innerHTML = '<option value="all">Tous les types</option>';
+            
+            // Ajouter les types uniques
+            types.sort().forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                select.appendChild(option);
+            });
+        }
+        
+        // Afficher la liste des légumes
+        function displayLegumesList() {
+            const container = document.getElementById('legumesListContainer');
+            const searchTerm = removeAccents(document.getElementById('searchLegumes').value.toLowerCase());
+            
+            let filteredLegumes = allLegumes;
+            
+            // Filtrer par producteur ou type
+            if (legumeFilter.type === 'producteur' && legumeFilter.value !== 'all') {
+                filteredLegumes = filteredLegumes.filter(l => l.producteur === legumeFilter.value);
+            } else if (legumeFilter.type === 'type' && legumeFilter.value !== 'all') {
+                filteredLegumes = filteredLegumes.filter(l => l.type === legumeFilter.value);
+            }
+            
+            // Filtrer par recherche
+            if (searchTerm) {
+                filteredLegumes = filteredLegumes.filter(l => 
+                    removeAccents(l.nom.toLowerCase()).includes(searchTerm)
+                );
+            }
+            
+            // Trier par nom
+            filteredLegumes.sort((a, b) => a.nom.toLowerCase().localeCompare(b.nom.toLowerCase()));
+            
+            container.innerHTML = '';
+            
+            if (filteredLegumes.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Aucun légume trouvé</div>';
+                return;
+            }
+            
+            filteredLegumes.forEach((legume) => {
+                const div = document.createElement('div');
+                const producteurClass = legume.producteur.toLowerCase().includes('brissonnerie') ? 'brissonnerie' : 'geoferme';
+                div.className = `legume-list-item ${producteurClass}`;
+                div.onclick = () => showLegumeDetails(legume);
+                
+                const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
+                
+                div.innerHTML = `
+                    <div class="legume-name-display">${legume.nom}</div>
+                    <div class="legume-right-info">
+                        <div class="legume-price-display">${priceDisplay}€<span class="legume-unit-display">/${legume.unite}</span></div>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+        
+        // Filtrer les légumes
+        function filterLegumes() {
+            displayLegumesList();
+        }
+        
+        // Définir le filtre
+        function setLegumeFilter(type, value) {
+            legumeFilter = { type, value };
+            
+            // Mettre à jour les boutons actifs
+            if (type === 'all') {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                document.querySelector('.filter-select').value = 'all';
+                document.querySelector('.filter-select').classList.remove('active');
+                document.querySelector('.filter-select').classList.remove('active');
+            } else if (type === 'producteur') {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                document.querySelector('.filter-select').value = 'all';
+            } else if (type === 'type') {
+                document.querySelectorAll('.filter-btn').forEach((btn, index) => {
+                    if (index === 0) {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Gérer la classe active du select
+                const select = document.querySelector('.filter-select');
+                if (value === 'all') {
+                    select.classList.remove('active');
+                    document.querySelectorAll('.filter-btn')[0].classList.add('active');
+                } else {
+                    select.classList.add('active');
+                }
+            }
+            
+            displayLegumesList();
+        }
+        
+        // Afficher les détails d'un légume
+        function showLegumeDetails(legume) {
+            const panel = document.getElementById('legumeDetailsPanel');
+            const content = document.getElementById('legumeDetailsContent');
+            
+            // Stocker le légume actuel pour l'édition
+            window.currentDetailLegume = legume;
+            
+            const priceDisplay = legume.prix.toFixed(2).replace('.', ',');
+            
+            content.innerHTML = `
+                <div style="padding: 15px 20px 10px; margin-bottom: 10px;">
+                    <button class="edit-legume-btn" onclick="editLegume(window.currentDetailLegume)" style="width: 100%;">
+                        ✏️ Modifier
+                    </button>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Nom</div>
+                    <div class="client-detail-value">${legume.nom}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Unité</div>
+                    <div class="client-detail-value">${legume.unite}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Prix/Unité</div>
+                    <div class="client-detail-value" style="font-weight: bold; color: ${legume.producteur.includes('Brissonnerie') ? '#5A9041' : '#FF7700'};">
+                        ${priceDisplay} €/${legume.unite}
+                    </div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Producteur</div>
+                    <div class="client-detail-value">${legume.producteur}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Type</div>
+                    <div class="client-detail-value">${legume.type || 'Non spécifié'}</div>
+                </div>
+                <div class="client-detail-row">
+                    <div class="client-detail-label">Commentaires</div>
+                    <div class="client-detail-value">${legume.commentaires || 'Aucun commentaire'}</div>
+                </div>
+            `;
+            
+            panel.classList.remove('hidden');
+            setTimeout(() => panel.classList.add('show'), 10);
+        }
+        
+        // Masquer les détails
+        function hideLegumeDetails() {
+            const panel = document.getElementById('legumeDetailsPanel');
+            panel.classList.remove('show');
+            setTimeout(() => panel.classList.add('hidden'), 300);
+        }
+        
+        // Afficher le formulaire légume
+        function showLegumeForm(legume = null) {
+            const overlay = document.getElementById('legumeFormOverlay');
+            const title = document.getElementById('legumeFormTitle');
+            const form = document.getElementById('legumeForm');
+            
+            if (legume) {
+                title.textContent = 'Modifier le légume';
+                document.getElementById('legumeIndex').value = legume.index;
+                document.getElementById('legumeNom').value = legume.nom;
+                document.getElementById('legumeUnite').value = legume.unite;
+                document.getElementById('legumePrix').value = legume.prix.toFixed(2);
+                document.getElementById('legumeProducteur').value = legume.producteur;
+                document.getElementById('legumeType').value = legume.type || '';
+                document.getElementById('legumeCommentaires').value = legume.commentaires || '';
+            } else {
+                title.textContent = 'Nouveau légume';
+                form.reset();
+                document.getElementById('legumeIndex').value = '-1';
+            }
+            
+            overlay.classList.remove('hidden');
+        }
+        
+        // Éditer un légume
+        function editLegume(legume) {
+            hideLegumeDetails();
+            showLegumeForm(legume);
+        }
+        
+        // Masquer le formulaire
+        function hideLegumeForm(event) {
+            if (!event || event.target.id === 'legumeFormOverlay') {
+                document.getElementById('legumeFormOverlay').classList.add('hidden');
+            }
+        }
+        
+        // Sauvegarder un légume
+        async function saveLegume(event) {
+            event.preventDefault();
+            
+            const index = parseInt(document.getElementById('legumeIndex').value);
+            const nom = document.getElementById('legumeNom').value.trim();
+            const unite = document.getElementById('legumeUnite').value;
+            const prix = document.getElementById('legumePrix').value;
+            const producteur = document.getElementById('legumeProducteur').value;
+            const type = document.getElementById('legumeType').value.trim();
+            const commentaires = document.getElementById('legumeCommentaires').value.trim();
+            
+            // Vérifier les doublons
+            const duplicate = allLegumes.find(l => 
+                removeAccents(l.nom.toLowerCase()) === removeAccents(nom.toLowerCase()) &&
+                l.producteur === producteur &&
+                l.index !== index
+            );
+            
+            if (duplicate) {
+                alert('Un légume avec ce nom existe déjà pour ce producteur !');
+                return;
+            }
+            
+            try {
+                const status = document.getElementById('status');
+                status.textContent = 'Enregistrement...';
+                status.className = 'status loading';
+                status.classList.remove('hidden');
+                
+                const values = [[
+                    nom,
+                    unite,
+                    prix,
+                    producteur,
+                    type,
+                    commentaires
+                ]];
+                
+                if (index === -1) {
+                    // Nouveau légume
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: 'Légumes!A:F',
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                } else {
+                    // Mise à jour
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: SPREADSHEET_ID,
+                        range: `Légumes!A${index}:F${index}`,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                }
+                
+                status.textContent = 'Légume enregistré avec succès !';
+                status.className = 'status success';
+                hideLegumeForm();
+                await loadAllLegumes();
+                
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+                
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Erreur: ' + err.message;
+                status.className = 'status error';
+                status.classList.remove('hidden');
+            }
+        }
 
         function displayClients() {
             const container = document.getElementById('clientsList');
@@ -2849,7 +3655,7 @@
                 
                 card.innerHTML = `
                     <div class="vegetable-name">${legume || 'Légume'}</div>
-                    <div class="vegetable-details">${qty} ${unit} × ${formattedUnitPrice}€/${unit}</div>
+                    <div class="vegetable-details"><span class="vegetable-quantity">${qty} ${unit}</span> × ${formattedUnitPrice}€/${unit}</div>
                     <div class="vegetable-price">${price.toFixed(2)} €</div>
                 `;
                 
@@ -2917,6 +3723,12 @@
         function editBasket() {
             alert('Fonction d\'édition à implémenter');
             // TODO: Implémenter la transition vers le mode édition
+        }
+        
+        // Créer une nouvelle semaine
+        function newWeek() {
+            alert('Fonction nouvelle semaine à implémenter');
+            // TODO: Implémenter la création d'une nouvelle semaine
         }
     </script>
 </body>
