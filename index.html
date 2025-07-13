@@ -1404,14 +1404,6 @@
             border-left: 4px solid #FF7700;
         }
         
-        .vegetable-card.tibere .vegetable-price {
-            color: #5A9041;
-        }
-        
-        .vegetable-card.principal .vegetable-price {
-            color: #FF7700;
-        }
-        
         .vegetable-name {
             font-weight: 600;
             font-size: 14px;
@@ -1420,15 +1412,26 @@
         }
         
         .vegetable-details {
-            font-size: 12px;
-            opacity: 0.8;
-            color: #666;
+            font-size: 11px;
+            opacity: 0.7;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .vegetable-price {
             font-weight: bold;
             margin-top: 2px;
             font-size: 14px;
+        }
+        
+        .vegetable-card.tibere .vegetable-price {
+            color: #5A9041;
+        }
+        
+        .vegetable-card.principal .vegetable-price {
+            color: #FF7700;
         }
         
         @media (max-width: 768px) {
@@ -1505,6 +1508,8 @@
             
             .vegetable-details {
                 font-size: 9px;
+                white-space: normal;
+                word-break: break-all;
             }
             
             .vegetable-price {
@@ -2810,6 +2815,9 @@
             data.forEach(row => {
                 const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal] = row;
                 const price = parseFloat(prixTotal) || 0;
+                const unitPrice = parseFloat(prixUnit) || 0;
+                const qty = quantite || '1';
+                const unit = unite || '';
                 
                 const card = document.createElement('div');
                 
@@ -2836,9 +2844,12 @@
                 
                 card.className = cardClass;
                 
+                // Formatter le prix unitaire avec virgule
+                const formattedUnitPrice = unitPrice.toFixed(2).replace('.', ',');
+                
                 card.innerHTML = `
                     <div class="vegetable-name">${legume || 'Légume'}</div>
-                    <div class="vegetable-details">${quantite || ''} ${unite || ''}</div>
+                    <div class="vegetable-details">${qty} ${unit} × ${formattedUnitPrice}€/${unit}</div>
                     <div class="vegetable-price">${price.toFixed(2)} €</div>
                 `;
                 
