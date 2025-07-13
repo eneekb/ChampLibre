@@ -483,15 +483,15 @@
         }
         
         .section-header {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 2px solid #e9ecef;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         
         @media (min-width: 768px) {
             .section-header {
-                margin-bottom: 30px;
-                padding-bottom: 15px;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
             }
         }
         
@@ -1257,7 +1257,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .week-nav-btn {
@@ -1295,34 +1295,36 @@
         
         .basket-summary {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(90, 144, 65, 0.1);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(90, 144, 65, 0.08);
         }
         
         .summary-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .summary-total h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             color: #5A9041;
-            font-size: 18px;
+            font-size: 16px;
+            line-height: 1.2;
         }
         
         .total-amount {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             color: #5A9041;
+            line-height: 1;
         }
         
         .summary-chart {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             position: relative;
         }
         
@@ -1336,70 +1338,70 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 10px 24px;
+            padding: 7px 20px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.25);
             width: 100%;
         }
         
         .edit-basket-btn:hover {
             background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(255, 119, 0, 0.4);
+            box-shadow: 0 3px 6px rgba(255, 119, 0, 0.35);
         }
         
         .vegetable-cards {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         
         @media (min-width: 768px) {
             .vegetable-cards {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 15px;
+                gap: 12px;
             }
         }
         
         @media (max-width: 767px) {
             .vegetable-cards {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
+                gap: 6px;
             }
         }
         
         .vegetable-card {
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.08);
             transition: all 0.2s ease;
             cursor: pointer;
             background: white;
         }
         
         .vegetable-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
         }
         
         .vegetable-card.tibere:hover {
-            box-shadow: 0 4px 12px rgba(90, 144, 65, 0.3);
+            box-shadow: 0 3px 8px rgba(90, 144, 65, 0.25);
         }
         
         .vegetable-card.principal:hover {
-            box-shadow: 0 4px 12px rgba(255, 119, 0, 0.3);
+            box-shadow: 0 3px 8px rgba(255, 119, 0, 0.25);
         }
         
         .vegetable-card.tibere {
-            border: 2px solid #5A9041;
-            border-left: 5px solid #5A9041;
+            border: 1.5px solid #5A9041;
+            border-left: 4px solid #5A9041;
         }
         
         .vegetable-card.principal {
-            border: 2px solid #FF7700;
-            border-left: 5px solid #FF7700;
+            border: 1.5px solid #FF7700;
+            border-left: 4px solid #FF7700;
         }
         
         .vegetable-card.tibere .vegetable-price {
@@ -1413,7 +1415,7 @@
         .vegetable-name {
             font-weight: 600;
             font-size: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             color: #333;
         }
         
@@ -1425,7 +1427,7 @@
         
         .vegetable-price {
             font-weight: bold;
-            margin-top: 4px;
+            margin-top: 2px;
             font-size: 14px;
         }
         
@@ -1433,6 +1435,7 @@
             .week-selector {
                 flex-wrap: nowrap;
                 gap: 5px;
+                margin-bottom: 12px;
             }
             
             .week-select {
@@ -1448,13 +1451,15 @@
             }
             
             .basket-summary {
-                padding: 15px;
+                padding: 12px 15px;
+                margin-bottom: 12px;
             }
             
             .summary-content {
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+                margin-bottom: 8px;
             }
             
             .summary-total {
@@ -1462,37 +1467,49 @@
             }
             
             .summary-total h3 {
-                font-size: 16px;
+                font-size: 14px;
+                margin-bottom: 3px;
+                line-height: 1.2;
             }
             
             .total-amount {
-                font-size: 24px;
+                font-size: 22px;
+                line-height: 1;
             }
             
             .summary-chart {
                 margin-top: 0;
-                width: 80px;
-                height: 80px;
+                width: 75px;
+                height: 75px;
+            }
+            
+            .edit-basket-btn {
+                padding: 6px 18px;
+                font-size: 14px;
+            }
+            
+            #paniers .section-header {
+                margin-bottom: 10px;
             }
             
             
         @media (max-width: 768px) {
             .vegetable-card {
-                padding: 8px;
+                padding: 7px;
             }
             
             .vegetable-name {
-                font-size: 12px;
-                margin-bottom: 2px;
+                font-size: 11px;
+                margin-bottom: 1px;
             }
             
             .vegetable-details {
-                font-size: 10px;
+                font-size: 9px;
             }
             
             .vegetable-price {
-                font-size: 12px;
-                margin-top: 2px;
+                font-size: 11px;
+                margin-top: 1px;
             }
         }
         }
@@ -1709,7 +1726,7 @@
                             <div class="total-amount" id="basketTotal">0.00 €</div>
                         </div>
                         <div class="summary-chart">
-                            <canvas id="repartitionChart" width="100" height="100"></canvas>
+                            <canvas id="repartitionChart" width="90" height="90"></canvas>
                         </div>
                     </div>
                     <button class="edit-basket-btn" onclick="editBasket()">
@@ -2854,7 +2871,7 @@
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             // Adapter le radius selon la taille du canvas
-            const radius = window.innerWidth <= 768 ? 35 : 40;
+            const radius = window.innerWidth <= 768 ? 32 : 38;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
