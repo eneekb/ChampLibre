@@ -1271,37 +1271,57 @@
         .basket-summary {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
             border: 1px solid rgba(90, 144, 65, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .basket-summary {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
         }
         
         .summary-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .summary-total h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             color: #5A9041;
-            font-size: 18px;
+            font-size: 16px;
         }
         
         .total-amount {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #5A9041;
         }
         
         .summary-chart {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             position: relative;
-            background: white;
-            border-radius: 50%;
-            padding: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-total h3 {
+                font-size: 14px;
+                margin-bottom: 3px;
+            }
+            
+            .total-amount {
+                font-size: 20px;
+            }
+            
+            .summary-chart {
+                width: 60px;
+                height: 60px;
+            }
         }
         
         #repartitionChart {
@@ -1322,6 +1342,13 @@
             width: 100%;
         }
         
+        @media (max-width: 768px) {
+            .edit-basket-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+        }
+        
         .edit-basket-btn:hover {
             background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
@@ -1330,24 +1357,30 @@
         
         .vegetable-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
         }
         
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
             .vegetable-cards {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
         }
         
         .vegetable-card {
-            padding: 12px;
+            padding: 16px;
             border-radius: 8px;
             border: 1px solid rgba(0,0,0,0.1);
             transition: all 0.2s ease;
             cursor: pointer;
             background: white;
+        }
+        
+        @media (max-width: 768px) {
+            .vegetable-card {
+                padding: 12px;
+            }
         }
         
         .vegetable-card:hover {
@@ -1383,13 +1416,13 @@
         
         .vegetable-name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 4px;
             color: #333;
         }
         
         .vegetable-details {
-            font-size: 12px;
+            font-size: 14px;
             opacity: 0.8;
             color: #666;
         }
@@ -1397,7 +1430,21 @@
         .vegetable-price {
             font-weight: bold;
             margin-top: 4px;
-            font-size: 14px;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .vegetable-name {
+                font-size: 14px;
+            }
+            
+            .vegetable-details {
+                font-size: 12px;
+            }
+            
+            .vegetable-price {
+                font-size: 14px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -1732,7 +1779,7 @@
         // Structure du Google Sheet:
         // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
-        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur, E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
+        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie" ou "Géoferme" exactement), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
         
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
         
@@ -2651,32 +2698,11 @@
                 });
                 
                 const values = response.result.values || [];
-                
-                // Debug : afficher les premières lignes et les semaines uniques
-                console.log('Données brutes (5 premières lignes):', values.slice(0, 5));
-                console.log('Semaine recherchée:', selectedWeek);
-                
-                // Afficher toutes les semaines uniques trouvées
-                const uniqueWeeks = [...new Set(values.map(row => row[1]).filter(Boolean))];
-                console.log('Semaines disponibles dans le sheet:', uniqueWeeks);
-                
-                // Si pas de correspondance exacte, essayer de trouver par la date
-                let weekData = values.filter(row => {
+                const weekData = values.filter(row => {
                     if (!row[0]) return false;
                     const rowWeek = row[1]; // Colonne Semaine
                     return rowWeek === selectedWeek;
                 });
-                
-                // Si aucune donnée trouvée avec le format de semaine, afficher toutes les données
-                if (weekData.length === 0 && values.length > 0) {
-                    console.log('Aucune correspondance trouvée. Format attendu:', selectedWeek);
-                    console.log('Formats trouvés:', uniqueWeeks);
-                    
-                    // Optionnel : afficher les données de la première semaine disponible
-                    // weekData = values.filter(row => row[1] === uniqueWeeks[0]);
-                }
-                
-                console.log('Données filtrées:', weekData.length, 'lignes');
                 
                 displayWeekComposition(weekData);
                 
@@ -2687,7 +2713,6 @@
                 status.textContent = 'Erreur: ' + err.message;
                 status.className = 'status error';
                 status.classList.remove('hidden');
-                console.error('Erreur complète:', err);
             }
         }
         
@@ -2700,11 +2725,7 @@
             let totalPrincipal = 0;
             
             if (data.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">
-                        Aucune composition pour cette semaine<br>
-                        <small>Vérifiez que le format de la semaine dans le sheet correspond</small>
-                    </div>`;
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">Aucune composition pour cette semaine</div>';
                 updateSummary(0, 0, 0);
                 return;
             }
@@ -2715,7 +2736,29 @@
                 const price = parseFloat(prixTotal) || 0;
                 
                 const card = document.createElement('div');
-                card.className = `vegetable-card ${producteur && producteur.toLowerCase() === 'tibère' ? 'tibere' : 'principal'}`;
+                
+                // Détection stricte des producteurs
+                let cardClass = 'vegetable-card';
+                let isValidProducer = false;
+                
+                if (producteur) {
+                    const producteurLower = producteur.toLowerCase().trim();
+                    if (producteurLower === 'ferme de la brissonnerie') {
+                        cardClass += ' tibere';
+                        isValidProducer = true;
+                    } else if (producteurLower === 'géoferme' || producteurLower === 'geoferme') {
+                        cardClass += ' principal';
+                        isValidProducer = true;
+                    }
+                }
+                
+                // Si producteur non reconnu, ignorer cette ligne
+                if (!isValidProducer) {
+                    ignoredCount++;
+                    return; // Passer à la ligne suivante
+                }
+                
+                card.className = cardClass;
                 
                 card.innerHTML = `
                     <div class="vegetable-name">${legume || 'Légume'}</div>
@@ -2726,9 +2769,9 @@
                 container.appendChild(card);
                 
                 // Calculer les totaux
-                if (producteur && producteur.toLowerCase() === 'tibère') {
+                if (cardClass.includes('tibere')) {
                     totalTibere += price;
-                } else {
+                } else if (cardClass.includes('principal')) {
                     totalPrincipal += price;
                 }
             });
@@ -2751,7 +2794,7 @@
             const ctx = canvas.getContext('2d');
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = 40;
+            const radius = window.innerWidth <= 768 ? 25 : 35;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -2789,4 +2832,4 @@
         }
     </script>
 </body>
-</html>
+</html></html>
