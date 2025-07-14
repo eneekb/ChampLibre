@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ChampLibre v6.0 - Laissez le champ libre à votre collaboration</title>
+    <title>ChampLibre - Laissez le champ libre à votre collaboration</title>
     <style>
         * {
             box-sizing: border-box;
@@ -1756,18 +1756,25 @@
             position: relative;
         }
         
-        .vegetable-card .edit-icon {
+        .vegetable-card .edit-btn {
             position: absolute;
             bottom: 8px;
             right: 8px;
-            font-size: 14px;
-            color: #FF7700;
-            opacity: 0.7;
-            transition: opacity 0.2s;
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
         }
         
-        .vegetable-card:hover .edit-icon {
-            opacity: 1;
+        .vegetable-card:hover .edit-btn {
+            background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(255, 119, 0, 0.4);
         }
         
         .vegetable-card .producer-badge {
@@ -1978,8 +1985,9 @@
                 right: 5px;
             }
             
-            .vegetable-card .edit-icon {
-                font-size: 12px;
+            .vegetable-card .edit-btn {
+                font-size: 11px;
+                padding: 3px 6px;
                 bottom: 5px;
                 right: 5px;
             }
@@ -2000,7 +2008,6 @@
             overflow-y: auto;
             display: block !important;
             pointer-events: auto;
-            padding: 20px;
         }
         
         @media (max-width: 768px) {
@@ -2045,48 +2052,24 @@
             box-shadow: 0 0 0 3px rgba(90, 144, 65, 0.1);
         }
         
-        .composition-action-btns {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .composition-action-btn {
-            flex: 1;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .composition-action-btn.calculate {
-            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
-            color: white;
-        }
-        
-        .composition-action-btn.calculate:hover {
-            background: linear-gradient(135deg, #4A7A35 0%, #3A6A25 100%);
-            transform: translateY(-1px);
-        }
-        
         .delete-composition-btn {
             width: 100%;
             padding: 12px 20px;
-            background: #dc3545;
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 30px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(255, 119, 0, 0.3);
         }
         
         .delete-composition-btn:hover {
-            background: #c82333;
+            background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
             transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(255, 119, 0, 0.4);
         }
     </style>
 </head>
@@ -2097,7 +2080,7 @@
             <img src="logo ChampLibre.png" alt="ChampLibre" class="header-logo">
             <div>
                 ChampLibre<br>
-                <span class="app-version">v6.0</span>
+                <span class="app-version">v<span class="version-number"></span></span>
             </div>
         </div>
         <button class="signout-btn-header" onclick="handleSignoutClick()">
@@ -2140,7 +2123,7 @@
                 <button id="authorizeBtn" class="login-btn" onclick="handleAuthClick()" disabled>
                     Se connecter avec Google
                 </button>
-                <div class="version-text">Version 6.0</div>
+                <div class="version-text">Version <span class="version-number"></span></div>
             </div>
         </div>
         
@@ -2153,7 +2136,7 @@
                 <h1 class="login-title">ChampLibre</h1>
                 <p class="login-slogan">Laissez le champ libre à la collaboration</p>
                 <h2 id="welcomeMessage" class="welcome-message">Bonjour !</h2>
-                <div class="version-text">Version 6.0</div>
+                <div class="version-text">Version <span class="version-number"></span></div>
             </div>
         </div>
 
@@ -2434,10 +2417,6 @@
                 
                 <!-- Détails composition (panneau latéral) -->
                 <div id="compositionDetailsPanel" class="composition-details-panel hidden">
-                    <div class="panel-header">
-                        <h3>Détails du légume</h3>
-                        <button class="close-panel-btn" onclick="hideCompositionDetails()">×</button>
-                    </div>
                     <div id="compositionDetailsContent">
                         <!-- Sera rempli dynamiquement -->
                     </div>
@@ -2482,8 +2461,11 @@
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
     <script>
+        // ========== CONFIGURATION VERSION ==========
+        // Modifie cette constante pour changer la version partout dans l'application
+        const APP_VERSION = '7.0';
+        
         // Configuration
-        const APP_VERSION = '6.0';
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
         const API_KEY = 'AIzaSyD_yNY61CXJjEF59zQiaBs_tTjsYA2LcTo';
         const SPREADSHEET_ID = '1piJc2p18YYUXdERUoNiOtpcNT44FN3jOa_LmPeUjSuE';
@@ -3898,6 +3880,8 @@
                 };
                 panierItems.push(itemData);
                 
+                const itemIndex = panierItems.length - 1;
+                
                 card.className = cardClass;
                 card.onclick = () => showCompositionDetails(itemData);
                 card.style.cursor = 'pointer';
@@ -3911,7 +3895,7 @@
                     <div class="vegetable-name">${legume || 'Légume'}</div>
                     <div class="vegetable-details"><span class="vegetable-quantity">${formattedQty} ${unit}</span> × ${formattedUnitPrice}€/${unit}</div>
                     <div class="vegetable-price">${price.toFixed(2).replace('.', ',')} €</div>
-                    <div class="edit-icon">✏️</div>
+                    <button class="edit-btn" onclick="event.stopPropagation(); showCompositionDetails(panierItems[${itemIndex}])">✏️</button>
                 `;
                 
                 container.appendChild(card);
@@ -4021,58 +4005,56 @@
             const quantityDisplay = item.quantite.toString().replace(',', '.');
             
             content.innerHTML = `
-                <div style="padding: 20px 20px 10px;">
-                    <h4 style="margin: 0 0 20px 0; color: #5A9041; font-size: 18px;">${item.legume}</h4>
+                <div class="panel-header">
+                    <h3>Éditer le légume</h3>
+                    <button class="close-panel-btn" onclick="hideCompositionDetails()">×</button>
                 </div>
+                <div style="padding: 20px;">
+                    <h4 style="margin: 0 0 20px 0; color: #5A9041; font-size: 18px;">${item.legume}</h4>
                 
-                <form id="compositionEditForm">
-                    <div class="composition-form-group">
-                        <label>Producteur</label>
-                        <select id="editProducteur" onchange="updateCompositionField('producteur', this.value)">
-                            <option value="Ferme de la Brissonnerie" ${item.producteur === 'Ferme de la Brissonnerie' ? 'selected' : ''}>Ferme de la Brissonnerie</option>
-                            <option value="Géoferme" ${item.producteur === 'Géoferme' ? 'selected' : ''}>Géoferme</option>
-                            <option value="Partagé" ${item.producteur === 'Partagé' ? 'selected' : ''}>Partagé</option>
-                            <option value="Extérieur" ${item.producteur === 'Extérieur' ? 'selected' : ''}>Extérieur</option>
-                        </select>
-                    </div>
+                    <form id="compositionEditForm">
+                        <div class="composition-form-group">
+                            <label>Producteur</label>
+                            <select id="editProducteur" onchange="updateCompositionField('producteur', this.value)">
+                                <option value="Ferme de la Brissonnerie" ${item.producteur === 'Ferme de la Brissonnerie' ? 'selected' : ''}>Ferme de la Brissonnerie</option>
+                                <option value="Géoferme" ${item.producteur === 'Géoferme' ? 'selected' : ''}>Géoferme</option>
+                                <option value="Partagé" ${item.producteur === 'Partagé' ? 'selected' : ''}>Partagé</option>
+                                <option value="Extérieur" ${item.producteur === 'Extérieur' ? 'selected' : ''}>Extérieur</option>
+                            </select>
+                        </div>
+                        
+                        <div class="composition-form-group">
+                            <label>Unité</label>
+                            <select id="editUnite" onchange="updateCompositionField('unite', this.value)">
+                                <option value="Kg" ${item.unite === 'Kg' ? 'selected' : ''}>Kg</option>
+                                <option value="Pièce" ${item.unite === 'Pièce' ? 'selected' : ''}>Pièce</option>
+                                <option value="Botte" ${item.unite === 'Botte' ? 'selected' : ''}>Botte</option>
+                            </select>
+                        </div>
+                        
+                        <div class="composition-form-group">
+                            <label>Quantité</label>
+                            <input type="number" id="editQuantite" value="${quantityDisplay}" 
+                                   step="0.1" min="0" onchange="updateCompositionField('quantite', this.value)">
+                        </div>
+                        
+                        <div class="composition-form-group">
+                            <label>Prix unitaire (€)</label>
+                            <input type="number" id="editPrixUnit" value="${priceDisplay}" 
+                                   step="0.01" min="0" onchange="updateCompositionField('prixUnit', this.value)">
+                        </div>
+                        
+                        <div class="composition-form-group">
+                            <label>Prix total</label>
+                            <input type="text" id="editPrixTotal" value="${item.prixTotal.toFixed(2).replace('.', ',')} €" 
+                                   disabled style="background: #f5f5f5; font-weight: bold;">
+                        </div>
+                    </form>
                     
-                    <div class="composition-form-group">
-                        <label>Unité</label>
-                        <select id="editUnite" onchange="updateCompositionField('unite', this.value)">
-                            <option value="Kg" ${item.unite === 'Kg' ? 'selected' : ''}>Kg</option>
-                            <option value="Pièce" ${item.unite === 'Pièce' ? 'selected' : ''}>Pièce</option>
-                            <option value="Botte" ${item.unite === 'Botte' ? 'selected' : ''}>Botte</option>
-                        </select>
-                    </div>
-                    
-                    <div class="composition-form-group">
-                        <label>Quantité</label>
-                        <input type="number" id="editQuantite" value="${quantityDisplay}" 
-                               step="0.1" min="0" onchange="updateCompositionField('quantite', this.value)">
-                    </div>
-                    
-                    <div class="composition-form-group">
-                        <label>Prix unitaire (€)</label>
-                        <input type="number" id="editPrixUnit" value="${priceDisplay}" 
-                               step="0.01" min="0" onchange="updateCompositionField('prixUnit', this.value)">
-                    </div>
-                    
-                    <div class="composition-form-group">
-                        <label>Prix total</label>
-                        <input type="text" id="editPrixTotal" value="${item.prixTotal.toFixed(2).replace('.', ',')} €" 
-                               disabled style="background: #f5f5f5; font-weight: bold;">
-                    </div>
-                    
-                    <div class="composition-action-btns">
-                        <button type="button" class="composition-action-btn calculate" onclick="recalculateTotal()">
-                            🔄 Recalculer le total
-                        </button>
-                    </div>
-                </form>
-                
-                <button class="delete-composition-btn" onclick="deleteCompositionItem()">
-                    🗑️ Supprimer ce légume
-                </button>
+                    <button class="delete-composition-btn" onclick="deleteCompositionItem()">
+                        🗑️ Retirer ce légume
+                    </button>
+                </div>
             `;
             
             panel.classList.remove('hidden');
@@ -4142,7 +4124,7 @@
         async function deleteCompositionItem() {
             if (!currentCompositionItem) return;
             
-            if (!confirm(`Êtes-vous sûr de vouloir supprimer "${currentCompositionItem.legume}" de la composition ?`)) {
+            if (!confirm(`Êtes-vous sûr de vouloir retirer "${currentCompositionItem.legume}" de la composition ?`)) {
                 return;
             }
             
@@ -4164,19 +4146,17 @@
             }
         }
         
-        // Recalculer le total
-        function recalculateTotal() {
-            if (!currentCompositionItem) return;
+        // Mettre à jour toutes les versions affichées au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mettre à jour le titre de la page
+            document.title = `ChampLibre v${APP_VERSION} - Laissez le champ libre à votre collaboration`;
             
-            const qty = parseFloat(document.getElementById('editQuantite').value) || 0;
-            const price = parseFloat(document.getElementById('editPrixUnit').value) || 0;
-            const total = qty * price;
-            
-            document.getElementById('editPrixTotal').value = total.toFixed(2).replace('.', ',') + ' €';
-            
-            // Sauvegarder automatiquement
-            updateCompositionField('prixUnit', price.toString());
-        }
+            // Mettre à jour tous les éléments avec la classe version-number
+            const versionElements = document.querySelectorAll('.version-number');
+            versionElements.forEach(element => {
+                element.textContent = APP_VERSION;
+            });
+        });
     </script>
 </body>
 </html>
