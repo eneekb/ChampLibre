@@ -1754,6 +1754,20 @@
             position: relative;
         }
         
+        .vegetable-card .edit-icon {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 14px;
+            color: #FF7700;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .vegetable-card:hover .edit-icon {
+            opacity: 1;
+        }
+        
         .vegetable-card .producer-badge {
             position: absolute;
             top: 8px;
@@ -1957,6 +1971,12 @@
                 height: 16px;
                 font-size: 8px;
                 top: 5px;
+                right: 5px;
+            }
+            
+            .vegetable-card .edit-icon {
+                font-size: 12px;
+                bottom: 5px;
                 right: 5px;
             }
         }
@@ -3783,6 +3803,7 @@
                     <div class="vegetable-name">${legume || 'Légume'}</div>
                     <div class="vegetable-details"><span class="vegetable-quantity">${qty} ${unit}</span> × ${formattedUnitPrice}€/${unit}</div>
                     <div class="vegetable-price">${price.toFixed(2)} €</div>
+                    <div class="edit-icon">✏️</div>
                 `;
                 
                 container.appendChild(card);
