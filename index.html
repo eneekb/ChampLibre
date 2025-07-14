@@ -929,7 +929,7 @@
             height: 100vh;
             background: white;
             box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s;
+            transition: right 0.3s ease, transform 0.3s ease;
             z-index: 500;
             overflow-y: auto;
             display: block !important;
@@ -949,6 +949,12 @@
         
         .legume-details-panel.hidden {
             display: none !important;
+        }
+        
+        /* Empêcher la sélection de texte pendant le swipe */
+        .legume-details-panel.swiping {
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .edit-legume-btn {
@@ -1387,7 +1393,7 @@
             height: 100vh;
             background: white;
             box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s;
+            transition: right 0.3s ease, transform 0.3s ease;
             z-index: 500;
             overflow-y: auto;
             display: block !important;
@@ -1407,6 +1413,12 @@
         
         .client-details-panel.hidden {
             display: none !important;
+        }
+        
+        /* Empêcher la sélection de texte pendant le swipe */
+        .client-details-panel.swiping {
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .panel-header {
@@ -1884,6 +1896,41 @@
             color: #666;
         }
         
+        .vegetable-card.add-card {
+            background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-left: 4px solid #FF7700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .vegetable-card.add-card:hover {
+            background: linear-gradient(135deg, #E56600 0%, #CC5500 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 119, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .add-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-card-icon {
+            font-size: 32px;
+            line-height: 1;
+        }
+        
         @media (max-width: 768px) {
             .week-selector {
                 flex-wrap: nowrap;
@@ -1991,7 +2038,37 @@
                 bottom: 5px;
                 right: 5px;
             }
+            
+            .vegetable-card.add-card {
+                min-height: 80px;
+                font-size: 14px;
+            }
+            
+            .add-card-icon {
+                font-size: 24px;
+            }
         }
+        }
+        
+        /* Overlay transparent pour fermer les panneaux */
+        .panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 499;
+            opacity: 0;
+            pointer-events: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .panel-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.3);
         }
         
         /* Panneau de détails composition */
@@ -2003,7 +2080,7 @@
             height: 100vh;
             background: white;
             box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s;
+            transition: right 0.3s ease, transform 0.3s ease;
             z-index: 500;
             overflow-y: auto;
             display: block !important;
@@ -2023,6 +2100,12 @@
         
         .composition-details-panel.hidden {
             display: none !important;
+        }
+        
+        /* Empêcher la sélection de texte pendant le swipe */
+        .composition-details-panel.swiping {
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .composition-form-group {
@@ -2252,6 +2335,9 @@
                     </div>
                 </div>
                 
+                <!-- Overlay pour fermer le panneau -->
+                <div id="clientPanelOverlay" class="panel-overlay" onclick="hideClientDetails()"></div>
+                
                 <!-- Détails client (panneau latéral) -->
                 <div id="clientDetailsPanel" class="client-details-panel hidden">
                     <div class="panel-header">
@@ -2354,6 +2440,9 @@
                     </div>
                 </div>
                 
+                <!-- Overlay pour fermer le panneau -->
+                <div id="legumePanelOverlay" class="panel-overlay" onclick="hideLegumeDetails()"></div>
+                
                 <!-- Détails légume (panneau latéral) -->
                 <div id="legumeDetailsPanel" class="legume-details-panel hidden">
                     <div class="panel-header">
@@ -2415,6 +2504,9 @@
                     <!-- Sera rempli dynamiquement -->
                 </div>
                 
+                <!-- Overlay pour fermer le panneau -->
+                <div id="compositionPanelOverlay" class="panel-overlay" onclick="hideCompositionDetails()"></div>
+                
                 <!-- Détails composition (panneau latéral) -->
                 <div id="compositionDetailsPanel" class="composition-details-panel hidden">
                     <div id="compositionDetailsContent">
@@ -2463,7 +2555,7 @@
     <script>
         // ========== CONFIGURATION VERSION ==========
         // Modifie cette constante pour changer la version partout dans l'application
-        const APP_VERSION = '7.0';
+        const APP_VERSION = '6.0';
         
         // Configuration
         const CLIENT_ID = '956460121691-soqqopuun40dd0ku815vuppdnoajekbj.apps.googleusercontent.com';
@@ -2500,6 +2592,17 @@
         let allLegumes = []; // Pour la section Légumes
         let legumeFilter = { type: 'all', value: 'all' };
         
+        // Variables pour la gestion du swipe
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let panelStartX = 0;
+        let isSwipingPanel = false;
+        let currentSwipePanel = null;
+        
+        // Gestion de l'historique pour le bouton retour Android
+        let navigationHistory = [];
+        window.isNavigatingBack = false;
+        
         // Date du jour
         const today = new Date();
         const dateStr = today.toLocaleDateString('fr-FR');
@@ -2510,23 +2613,26 @@
             // Fermer les panneaux ouverts
             if (currentSection === 'clients') {
                 const panel = document.getElementById('clientDetailsPanel');
-                if (panel) {
-                    panel.classList.remove('show');
-                    setTimeout(() => panel.classList.add('hidden'), 300);
+                if (panel && panel.classList.contains('show')) {
+                    hideClientDetails();
                 }
-                document.getElementById('clientFormOverlay').classList.add('hidden');
+                const formOverlay = document.getElementById('clientFormOverlay');
+                if (formOverlay && !formOverlay.classList.contains('hidden')) {
+                    hideClientForm({ target: { id: 'clientFormOverlay' } });
+                }
             } else if (currentSection === 'legumes') {
                 const panel = document.getElementById('legumeDetailsPanel');
-                if (panel) {
-                    panel.classList.remove('show');
-                    setTimeout(() => panel.classList.add('hidden'), 300);
+                if (panel && panel.classList.contains('show')) {
+                    hideLegumeDetails();
                 }
-                document.getElementById('legumeFormOverlay').classList.add('hidden');
+                const formOverlay = document.getElementById('legumeFormOverlay');
+                if (formOverlay && !formOverlay.classList.contains('hidden')) {
+                    hideLegumeForm({ target: { id: 'legumeFormOverlay' } });
+                }
             } else if (currentSection === 'paniers') {
                 const panel = document.getElementById('compositionDetailsPanel');
-                if (panel) {
-                    panel.classList.remove('show');
-                    setTimeout(() => panel.classList.add('hidden'), 300);
+                if (panel && panel.classList.contains('show')) {
+                    hideCompositionDetails();
                 }
                 currentCompositionItem = null;
             }
@@ -2964,6 +3070,7 @@
         function showClientDetails(client) {
             const panel = document.getElementById('clientDetailsPanel');
             const content = document.getElementById('clientDetailsContent');
+            const overlay = document.getElementById('clientPanelOverlay');
             
             // Stocker le client actuel pour l'édition
             window.currentDetailClient = client;
@@ -3025,14 +3132,53 @@
             `;
             
             panel.classList.remove('hidden');
-            setTimeout(() => panel.classList.add('show'), 10);
+            setTimeout(() => {
+                panel.classList.add('show');
+                overlay.classList.add('show');
+            }, 10);
+            
+            // Ajouter à l'historique pour le bouton retour Android
+            history.pushState({ panel: 'compositionDetails' }, '');
+            navigationHistory.push('compositionDetails');
+            
+            // Initialiser le swipe sur mobile
+            initPanelSwipe(panel);
+            overlay.classList.add('show');
+            
+            // Ajouter à l'historique pour le bouton retour Android
+            history.pushState({ panel: 'legumeDetails' }, '');
+            navigationHistory.push('legumeDetails');
+            
+            // Initialiser le swipe sur mobile
+            initPanelSwipe(panel);
+            overlay.classList.add('show');
+            
+            // Ajouter à l'historique pour le bouton retour Android
+            history.pushState({ panel: 'clientDetails' }, '');
+            navigationHistory.push('clientDetails');
+            
+            // Initialiser le swipe sur mobile
+            initPanelSwipe(panel);
         }
         
         // Masquer les détails
         function hideClientDetails() {
             const panel = document.getElementById('clientDetailsPanel');
+            const overlay = document.getElementById('clientPanelOverlay');
             panel.classList.remove('show');
-            setTimeout(() => panel.classList.add('hidden'), 300);
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                panel.classList.add('hidden');
+            }, 300);
+            
+            // Retirer de l'historique si c'est le dernier élément
+            if (navigationHistory[navigationHistory.length - 1] === 'clientDetails') {
+                navigationHistory.pop();
+                // Si on n'est pas en train de naviguer via le bouton retour, on met à jour l'historique
+                if (!window.isNavigatingBack) {
+                    history.back();
+                }
+            }
         }
         
         // Afficher le formulaire client
@@ -3060,6 +3206,14 @@
             }
             
             overlay.classList.remove('hidden');
+            
+            // Ajouter à l'historique pour le bouton retour Android
+            history.pushState({ panel: 'legumeForm' }, '');
+            navigationHistory.push('legumeForm');
+            
+            // Ajouter à l'historique pour le bouton retour Android
+            history.pushState({ panel: 'clientForm' }, '');
+            navigationHistory.push('clientForm');
         }
         
         // Éditer un client
@@ -3072,6 +3226,14 @@
         function hideClientForm(event) {
             if (!event || event.target.id === 'clientFormOverlay') {
                 document.getElementById('clientFormOverlay').classList.add('hidden');
+                
+                // Retirer de l'historique si c'est le dernier élément
+                if (navigationHistory[navigationHistory.length - 1] === 'clientForm') {
+                    navigationHistory.pop();
+                    if (!window.isNavigatingBack) {
+                        history.back();
+                    }
+                }
             }
         }
         
@@ -3326,6 +3488,7 @@
         function showLegumeDetails(legume) {
             const panel = document.getElementById('legumeDetailsPanel');
             const content = document.getElementById('legumeDetailsContent');
+            const overlay = document.getElementById('legumePanelOverlay');
             
             // Stocker le légume actuel pour l'édition
             window.currentDetailLegume = legume;
@@ -3373,8 +3536,20 @@
         // Masquer les détails
         function hideLegumeDetails() {
             const panel = document.getElementById('legumeDetailsPanel');
+            const overlay = document.getElementById('legumePanelOverlay');
             panel.classList.remove('show');
-            setTimeout(() => panel.classList.add('hidden'), 300);
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                panel.classList.add('hidden');
+            }, 300);
+            
+            // Retirer de l'historique si c'est le dernier élément
+            if (navigationHistory[navigationHistory.length - 1] === 'legumeDetails') {
+                navigationHistory.pop();
+                if (!window.isNavigatingBack) {
+                    history.back();
+                }
+            }
         }
         
         // Afficher le formulaire légume
@@ -3411,6 +3586,14 @@
         function hideLegumeForm(event) {
             if (!event || event.target.id === 'legumeFormOverlay') {
                 document.getElementById('legumeFormOverlay').classList.add('hidden');
+                
+                // Retirer de l'historique si c'est le dernier élément
+                if (navigationHistory[navigationHistory.length - 1] === 'legumeForm') {
+                    navigationHistory.pop();
+                    if (!window.isNavigatingBack) {
+                        history.back();
+                    }
+                }
             }
         }
         
@@ -3810,13 +3993,190 @@
             let ignoredCount = 0;
             
             if (data.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">Aucune composition pour cette semaine</div>';
+                // Si aucune composition, afficher juste la carte d'ajout
+                const addCard = document.createElement('div');
+                addCard.className = 'vegetable-card add-card';
+                addCard.onclick = addVegetableToBasket;
+                addCard.innerHTML = `
+                    <div class="add-card-content">
+                        <div class="add-card-icon">+</div>
+                        <div>Ajouter un légume</div>
+                    </div>
+                `;
+                container.appendChild(addCard);
+                
                 updateSummary(0, 0, 0);
                 document.getElementById('weekClientsCount').textContent = '0';
                 return;
             }
             
-            // Créer les cartes de légumes
+            // Charger les types de légumes depuis la feuille Légumes pour le tri
+            loadLegumeTypes().then(legumeTypes => {
+                // Trier les données par type de légume
+                const sortedData = [...data].sort((a, b) => {
+                    const legA = a[2]; // nom du légume
+                    const legB = b[2];
+                    
+                    const typeA = legumeTypes[legA] || 'Autre';
+                    const typeB = legumeTypes[legB] || 'Autre';
+                    
+                    const orderMap = {
+                        'Terreux': 1,
+                        'Résistant': 2,
+                        'Fragile': 3,
+                        'Autre': 4
+                    };
+                    
+                    return (orderMap[typeA] || 4) - (orderMap[typeB] || 4);
+                });
+                
+                // Créer les cartes de légumes
+                sortedData.forEach((row, dataIndex) => {
+                    const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal, valide] = row;
+                    const price = parseFloat(prixTotal) || 0;
+                    const unitPrice = parseFloat(prixUnit) || 0;
+                    const qty = (quantite || '1').toString().replace(',', '.');
+                    const unit = unite || '';
+                    
+                    const card = document.createElement('div');
+                    
+                    // Détection des producteurs
+                    let cardClass = 'vegetable-card';
+                    let badgeClass = '';
+                    let badgeText = '';
+                    let isValidProducer = false;
+                    
+                    if (producteur) {
+                        if (producteur === 'Ferme de la Brissonnerie') {
+                            cardClass += ' fdlb';
+                            badgeClass = 'fdlb';
+                            badgeText = 'FDLB';
+                            isValidProducer = true;
+                            totalFDLB += price;
+                        } else if (producteur === 'Géoferme') {
+                            cardClass += ' gf';
+                            badgeClass = 'gf';
+                            badgeText = 'GF';
+                            isValidProducer = true;
+                            totalGF += price;
+                        } else if (producteur === 'Partagé') {
+                            cardClass += ' partage';
+                            badgeClass = 'partage';
+                            badgeText = 'Part.';
+                            isValidProducer = true;
+                        } else if (producteur === 'Extérieur') {
+                            cardClass += ' exterieur';
+                            badgeClass = 'exterieur';
+                            badgeText = 'Ext.';
+                            isValidProducer = true;
+                        }
+                    }
+                    
+                    // Si producteur non reconnu, ignorer cette ligne
+                    if (!isValidProducer) {
+                        ignoredCount++;
+                        return; // Passer à la ligne suivante
+                    }
+                    
+                    // Trouver l'index correct dans la data originale
+                    const originalIndex = data.findIndex(item => 
+                        item[2] === legume && item[3] === producteur && item[5] === quantite
+                    );
+                    
+                    // Stocker les données pour l'édition
+                    const itemData = {
+                        index: originalIndex,
+                        rowIndex: currentWeekRows[originalIndex],
+                        date: date,
+                        semaine: semaine,
+                        legume: legume,
+                        producteur: producteur,
+                        unite: unite,
+                        quantite: qty,
+                        prixUnit: unitPrice,
+                        prixTotal: price,
+                        valide: valide
+                    };
+                    panierItems.push(itemData);
+                    
+                    const itemIndex = panierItems.length - 1;
+                    
+                    card.className = cardClass;
+                    card.onclick = () => showCompositionDetails(itemData);
+                    card.style.cursor = 'pointer';
+                    
+                    // Formatter le prix unitaire avec virgule
+                    const formattedUnitPrice = unitPrice.toFixed(2).replace('.', ',');
+                    const formattedQty = qty.replace('.', ',');
+                    
+                    card.innerHTML = `
+                        <div class="producer-badge ${badgeClass}">${badgeText}</div>
+                        <div class="vegetable-name">${legume || 'Légume'}</div>
+                        <div class="vegetable-details"><span class="vegetable-quantity">${formattedQty} ${unit}</span> × ${formattedUnitPrice}€/${unit}</div>
+                        <div class="vegetable-price">${price.toFixed(2).replace('.', ',')} €</div>
+                        <button class="edit-btn" onclick="event.stopPropagation(); showCompositionDetails(panierItems[${itemIndex}])">✏️</button>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+                
+                // Ajouter la carte d'ajout à la fin
+                const addCard = document.createElement('div');
+                addCard.className = 'vegetable-card add-card';
+                addCard.onclick = addVegetableToBasket;
+                addCard.innerHTML = `
+                    <div class="add-card-content">
+                        <div class="add-card-icon">+</div>
+                        <div>Ajouter un légume</div>
+                    </div>
+                `;
+                container.appendChild(addCard);
+                
+                updateSummary(totalFDLB, totalGF, sortedData.length);
+            }).catch(err => {
+                console.error('Erreur lors du chargement des types de légumes:', err);
+                // En cas d'erreur, afficher sans tri
+                displayWeekCompositionWithoutSort(data);
+            });
+        }
+        
+        // Fonction pour charger les types de légumes
+        async function loadLegumeTypes() {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Légumes!A2:E100',
+                });
+                
+                const values = response.result.values || [];
+                const types = {};
+                
+                values.forEach(row => {
+                    if (row[0] && row[4]) {
+                        types[row[0]] = row[4]; // nom -> type
+                    }
+                });
+                
+                return types;
+            } catch (err) {
+                console.error('Erreur chargement types de légumes:', err);
+                return {};
+            }
+        }
+        
+        // Fonction de fallback sans tri
+        function displayWeekCompositionWithoutSort(data) {
+            const container = document.getElementById('vegetableCards');
+            container.innerHTML = '';
+            
+            // Stocker les données pour l'édition
+            panierItems = [];
+            
+            let totalFDLB = 0;
+            let totalGF = 0;
+            let ignoredCount = 0;
+            
+            // Créer les cartes de légumes (sans tri)
             data.forEach((row, dataIndex) => {
                 const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal, valide] = row;
                 const price = parseFloat(prixTotal) || 0;
@@ -3900,6 +4260,18 @@
                 
                 container.appendChild(card);
             });
+            
+            // Ajouter la carte d'ajout à la fin
+            const addCard = document.createElement('div');
+            addCard.className = 'vegetable-card add-card';
+            addCard.onclick = addVegetableToBasket;
+            addCard.innerHTML = `
+                <div class="add-card-content">
+                    <div class="add-card-icon">+</div>
+                    <div>Ajouter un légume</div>
+                </div>
+            `;
+            container.appendChild(addCard);
             
             updateSummary(totalFDLB, totalGF, data.length);
         }
@@ -3992,10 +4364,17 @@
             // TODO: Implémenter la création d'une nouvelle semaine
         }
         
+        // Ajouter un légume au panier
+        function addVegetableToBasket() {
+            alert('Fonction d\'ajout de légume à implémenter');
+            // TODO: Implémenter l'ajout de légume au panier
+        }
+        
         // Afficher les détails d'un item de composition
         function showCompositionDetails(item) {
             const panel = document.getElementById('compositionDetailsPanel');
             const content = document.getElementById('compositionDetailsContent');
+            const overlay = document.getElementById('compositionPanelOverlay');
             
             // Stocker l'item actuel
             currentCompositionItem = item;
@@ -4018,7 +4397,6 @@
                             <select id="editProducteur" onchange="updateCompositionField('producteur', this.value)">
                                 <option value="Ferme de la Brissonnerie" ${item.producteur === 'Ferme de la Brissonnerie' ? 'selected' : ''}>Ferme de la Brissonnerie</option>
                                 <option value="Géoferme" ${item.producteur === 'Géoferme' ? 'selected' : ''}>Géoferme</option>
-                                <option value="Partagé" ${item.producteur === 'Partagé' ? 'selected' : ''}>Partagé</option>
                                 <option value="Extérieur" ${item.producteur === 'Extérieur' ? 'selected' : ''}>Extérieur</option>
                             </select>
                         </div>
@@ -4052,7 +4430,7 @@
                     </form>
                     
                     <button class="delete-composition-btn" onclick="deleteCompositionItem()">
-                        🗑️ Retirer ce légume
+                        🗑️ Retirer ce légume du panier
                     </button>
                 </div>
             `;
@@ -4064,9 +4442,21 @@
         // Masquer les détails
         function hideCompositionDetails() {
             const panel = document.getElementById('compositionDetailsPanel');
+            const overlay = document.getElementById('compositionPanelOverlay');
             panel.classList.remove('show');
-            setTimeout(() => panel.classList.add('hidden'), 300);
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                panel.classList.add('hidden');
+            }, 300);
             currentCompositionItem = null;
+            
+            // Retirer de l'historique si c'est le dernier élément
+            if (navigationHistory[navigationHistory.length - 1] === 'compositionDetails') {
+                navigationHistory.pop();
+                if (!window.isNavigatingBack) {
+                    history.back();
+                }
+            }
         }
         
         // Mettre à jour un champ
@@ -4124,7 +4514,7 @@
         async function deleteCompositionItem() {
             if (!currentCompositionItem) return;
             
-            if (!confirm(`Êtes-vous sûr de vouloir retirer "${currentCompositionItem.legume}" de la composition ?`)) {
+            if (!confirm(`Êtes-vous sûr de vouloir retirer "${currentCompositionItem.legume}" du panier ?`)) {
                 return;
             }
             
@@ -4146,6 +4536,114 @@
             }
         }
         
+        // ========== FONCTIONS DE GESTION DU SWIPE ==========
+        
+        function initPanelSwipe(panel) {
+            // Seulement sur mobile
+            if (window.innerWidth > 768) return;
+            
+            panel.addEventListener('touchstart', handleTouchStart, { passive: true });
+            panel.addEventListener('touchmove', handleTouchMove, { passive: true });
+            panel.addEventListener('touchend', handleTouchEnd, { passive: true });
+        }
+        
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            panelStartX = 0;
+            isSwipingPanel = false;
+            currentSwipePanel = e.currentTarget;
+        }
+        
+        function handleTouchMove(e) {
+            if (!touchStartX || !touchStartY) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            const diffX = touchX - touchStartX;
+            const diffY = Math.abs(touchY - touchStartY);
+            
+            // Si le mouvement vertical est plus important, on ne swipe pas
+            if (diffY > Math.abs(diffX) || diffY > 30) return;
+            
+            // Si on swipe vers la gauche, on ne fait rien
+            if (diffX < 0) return;
+            
+            isSwipingPanel = true;
+            currentSwipePanel.classList.add('swiping');
+            
+            // Déplacer le panneau
+            currentSwipePanel.style.transition = 'none';
+            currentSwipePanel.style.transform = `translateX(${diffX}px)`;
+        }
+        
+        function handleTouchEnd(e) {
+            if (!isSwipingPanel || !currentSwipePanel) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchEndX - touchStartX;
+            
+            // Si on a swipé de plus de 80px vers la droite, on ferme
+            if (diffX > 80) {
+                currentSwipePanel.style.transition = 'transform 0.3s ease';
+                currentSwipePanel.style.transform = 'translateX(100%)';
+                
+                // Fermer le panneau correspondant
+                setTimeout(() => {
+                    if (currentSwipePanel.id === 'clientDetailsPanel') {
+                        hideClientDetails();
+                    } else if (currentSwipePanel.id === 'legumeDetailsPanel') {
+                        hideLegumeDetails();
+                    } else if (currentSwipePanel.id === 'compositionDetailsPanel') {
+                        hideCompositionDetails();
+                    }
+                    currentSwipePanel.style.transform = '';
+                }, 300);
+            } else {
+                // Sinon on remet en place
+                currentSwipePanel.style.transition = 'transform 0.3s ease';
+                currentSwipePanel.style.transform = 'translateX(0)';
+            }
+            
+            // Reset
+            touchStartX = 0;
+            touchStartY = 0;
+            isSwipingPanel = false;
+            if (currentSwipePanel) {
+                currentSwipePanel.classList.remove('swiping');
+            }
+            currentSwipePanel = null;
+        }
+        
+        // ========== GESTION DU BOUTON RETOUR ANDROID ==========
+        
+        window.addEventListener('popstate', function(e) {
+            window.isNavigatingBack = true;
+            
+            // Récupérer le dernier panneau ouvert
+            const lastPanel = navigationHistory[navigationHistory.length - 1];
+            
+            if (lastPanel === 'clientDetails') {
+                hideClientDetails();
+            } else if (lastPanel === 'legumeDetails') {
+                hideLegumeDetails();
+            } else if (lastPanel === 'compositionDetails') {
+                hideCompositionDetails();
+            } else if (lastPanel === 'clientForm') {
+                hideClientForm({ target: { id: 'clientFormOverlay' } });
+            } else if (lastPanel === 'legumeForm') {
+                hideLegumeForm({ target: { id: 'legumeFormOverlay' } });
+            } else if (navigationHistory.length === 0 && e.state && e.state.page === 'main') {
+                // Si on est sur la page principale et qu'on appuie sur retour
+                // On ajoute un nouvel état pour empêcher de quitter l'app
+                history.pushState({ page: 'main' }, '');
+            }
+            
+            setTimeout(() => {
+                window.isNavigatingBack = false;
+            }, 100);
+        });
+        
         // Mettre à jour toutes les versions affichées au chargement
         document.addEventListener('DOMContentLoaded', function() {
             // Mettre à jour le titre de la page
@@ -4156,6 +4654,9 @@
             versionElements.forEach(element => {
                 element.textContent = APP_VERSION;
             });
+            
+            // Initialiser l'état de l'historique
+            history.replaceState({ page: 'main' }, '');
         });
     </script>
 </body>
