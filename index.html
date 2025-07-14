@@ -1623,12 +1623,6 @@
         }
         
         @media (max-width: 768px) {
-            .summary-info {
-                flex-direction: column;
-                gap: 8px;
-                align-items: flex-start;
-            }
-            
             .clients-count {
                 font-size: 12px;
             }
@@ -1682,14 +1676,16 @@
         }
         
         .basket-action-btn {
-            width: 45px;
-            height: 45px;
+            padding: 6px 12px;
+            min-width: 36px;
+            height: auto;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s ease, transform 0.3s ease;
-            display: flex;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
@@ -1698,22 +1694,16 @@
             overflow: hidden;
         }
         
-        .basket-action-btn.edit-btn {
-            background: linear-gradient(135deg, #5A9041 0%, #4A7A35 100%);
-            color: white;
-        }
-        
-        .basket-action-btn.edit-btn:hover {
-            background: linear-gradient(135deg, #4A7A35 0%, #3A6A25 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 6px rgba(90, 144, 65, 0.35);
+        @media (min-width: 768px) {
+            .basket-action-btn {
+                padding: 8px 14px;
+                min-width: 40px;
+            }
         }
         
         .basket-action-btn.new-week-btn {
             background: linear-gradient(135deg, #FF7700 0%, #E56600 100%);
             color: white;
-            font-size: 24px;
-            font-weight: bold;
         }
         
         .basket-action-btn.new-week-btn:hover {
@@ -1723,15 +1713,11 @@
         }
         
         .basket-action-btn:hover {
-            transform: translateY(-1px) scale(1.05);
+            transform: translateY(-1px);
         }
         
         .basket-action-btn:active {
-            transform: translateY(0) scale(0.98);
-        }
-        
-        .basket-action-btn.edit-btn:active {
-            background: linear-gradient(135deg, #3A6A25 0%, #2A5A15 100%);
+            transform: translateY(0);
         }
         
         .basket-action-btn.new-week-btn:active {
@@ -1748,12 +1734,6 @@
             .vegetable-cards {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
-            }
-            
-            .basket-action-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
             }
         }
         
@@ -1938,9 +1918,7 @@
             }
             
             .basket-action-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
+                font-size: 18px;
             }
             
             #paniers .section-header {
@@ -2295,9 +2273,6 @@
                 
                 <!-- Boutons d'action -->
                 <div class="basket-actions">
-                    <button class="basket-action-btn edit-btn" onclick="editBasket()" title="Modifier">
-                        ✏️
-                    </button>
                     <button class="basket-action-btn new-week-btn" onclick="newWeek()" title="Nouvelle semaine">
                         +
                     </button>
@@ -2316,7 +2291,7 @@
                     </div>
                     <div class="summary-info">
                         <div class="clients-count">
-                            Clients prévus : <strong id="weekClientsCount">0</strong>
+                            Nombre de paniers : <strong id="weekClientsCount">0</strong>
                         </div>
                         <div class="validation-container">
                             <input type="checkbox" id="validationCheckbox" class="validation-checkbox" onchange="toggleValidation()">
@@ -2328,6 +2303,17 @@
                 <!-- Cartes de légumes -->
                 <div id="vegetableCards" class="vegetable-cards">
                     <!-- Sera rempli dynamiquement -->
+                </div>
+                
+                <!-- Détails composition (panneau latéral) -->
+                <div id="compositionDetailsPanel" class="composition-details-panel hidden">
+                    <div class="panel-header">
+                        <h3>Détails du légume</h3>
+                        <button class="close-panel-btn" onclick="hideCompositionDetails()">×</button>
+                    </div>
+                    <div id="compositionDetailsContent">
+                        <!-- Sera rempli dynamiquement -->
+                    </div>
                 </div>
             </div>
 
@@ -2378,7 +2364,7 @@
         // Structure du Google Sheet:
         // Feuille "Clients": A=Nom, B=Prénom, C=Email, D=Téléphone, E=Actif, F=Date inscription, G=Commentaires, H=Solde
         // Feuille "Distributions": A=Date, B=Client, C=Présent, D=Report, E=Commentaire
-        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie" ou "Géoferme" exactement), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total
+        // Feuille "Composition des paniers": A=Date, B=Semaine, C=Légume, D=Producteur ("Ferme de la Brissonnerie" ou "Géoferme" exactement), E=Unité, F=Quantité, G=Prix unitaire, H=Prix total, I=Validé
         // Feuille "Légumes": A=Nom, B=Unité, C=Prix/Unité, D=Producteur, E=Type, F=Commentaires
         
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
@@ -2399,6 +2385,8 @@
         let hasTriedAutoConnect = false; // Pour éviter les boucles infinies
         let panierItems = []; // Pour stocker les items du panier en cours
         let currentWeek = ''; // Pour stocker la semaine courante
+        let currentWeekRows = []; // Pour stocker les indices des lignes de la semaine courante
+        let currentCompositionItem = null; // Pour stocker l'item en cours d'édition
         let userFirstName = ''; // Pour stocker le prénom de l'utilisateur
         let allLegumes = []; // Pour la section Légumes
         let legumeFilter = { type: 'all', value: 'all' };
@@ -2425,6 +2413,13 @@
                     setTimeout(() => panel.classList.add('hidden'), 300);
                 }
                 document.getElementById('legumeFormOverlay').classList.add('hidden');
+            } else if (currentSection === 'paniers') {
+                const panel = document.getElementById('compositionDetailsPanel');
+                if (panel) {
+                    panel.classList.remove('show');
+                    setTimeout(() => panel.classList.add('hidden'), 300);
+                }
+                currentCompositionItem = null;
             }
             
             // Cacher toutes les sections
@@ -2683,6 +2678,8 @@
                 allLegumes = [];
                 distributionStatus = {};
                 panierItems = [];
+                currentWeekRows = [];
+                currentCompositionItem = null;
                 userFirstName = '';
                 legumeFilter = { type: 'all', value: 'all' };
                 document.getElementById('userInfo').innerHTML = '';
@@ -3614,6 +3611,7 @@
         async function loadWeekData() {
             const selectedWeek = document.getElementById('weekSelect').value;
             currentWeek = selectedWeek;
+            currentWeekRows = []; // Réinitialiser les indices
             
             // Mettre à jour les boutons de navigation
             updateNavigationButtons();
@@ -3621,14 +3619,18 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: SPREADSHEET_ID,
-                    range: 'Composition des paniers!A2:H1000',
+                    range: 'Composition des paniers!A2:I1000',
                 });
                 
                 const values = response.result.values || [];
-                const weekData = values.filter(row => {
-                    if (!row[0]) return false;
-                    const rowWeek = row[1]; // Colonne Semaine
-                    return rowWeek === selectedWeek;
+                const weekData = [];
+                
+                // Filtrer et stocker les indices des lignes de la semaine
+                values.forEach((row, index) => {
+                    if (row[0] && row[1] === selectedWeek) {
+                        weekData.push(row);
+                        currentWeekRows.push(index + 2); // +2 car on commence à la ligne 2
+                    }
                 });
                 
                 displayWeekComposition(weekData);
@@ -3636,58 +3638,53 @@
                 // Charger le nombre de clients prévus
                 await loadWeekClientsCount(selectedWeek);
                 
-                // Réinitialiser la case de validation (sans persistance pour l'instant)
-                document.getElementById('validationCheckbox').checked = false;
+                // Vérifier l'état de validation (colonne I)
+                const isValidated = weekData.length > 0 && weekData[0][8] === 'O';
+                document.getElementById('validationCheckbox').checked = isValidated;
                 
             } catch (err) {
                 console.error('Erreur chargement composition:', err);
             }
         }
         
-        // Charger le nombre de clients prévus pour la semaine
-        async function loadWeekClientsCount(weekString) {
+        // Gérer la case de validation
+        async function toggleValidation() {
+            const checkbox = document.getElementById('validationCheckbox');
+            const isChecked = checkbox.checked;
+            
+            if (currentWeekRows.length === 0) {
+                console.error('Aucune ligne à valider');
+                checkbox.checked = false;
+                return;
+            }
+            
             try {
-                // Obtenir les dates de la semaine
-                const weekDates = getWeekDates(weekString);
+                // Préparer les données de mise à jour
+                const requests = [];
                 
-                // Charger les distributions
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Distributions!A2:B1000',
+                currentWeekRows.forEach(rowIndex => {
+                    requests.push({
+                        range: `Composition des paniers!I${rowIndex}`,
+                        values: [[isChecked ? 'O' : '']]
+                    });
                 });
                 
-                const values = response.result.values || [];
-                const uniqueClients = new Set();
-                
-                // Filtrer les distributions de la semaine et compter les clients uniques
-                values.forEach(row => {
-                    if (row[0] && row[1]) {
-                        const distDate = new Date(row[0]);
-                        // Vérifier si la date est dans la semaine sélectionnée
-                        if (distDate >= weekDates.start && distDate <= weekDates.end) {
-                            uniqueClients.add(row[1]); // Ajouter le nom du client
-                        }
+                // Mettre à jour toutes les lignes en une seule requête
+                await gapi.client.sheets.spreadsheets.values.batchUpdate({
+                    spreadsheetId: SPREADSHEET_ID,
+                    resource: {
+                        valueInputOption: 'USER_ENTERED',
+                        data: requests
                     }
                 });
                 
-                // Mettre à jour l'affichage
-                document.getElementById('weekClientsCount').textContent = uniqueClients.size;
+                console.log(`Composition ${isChecked ? 'validée' : 'non validée'} pour la semaine:`, currentWeek);
                 
             } catch (err) {
-                console.error('Erreur chargement nombre de clients:', err);
-                document.getElementById('weekClientsCount').textContent = '0';
-            }
-        }
-        
-        // Gérer la case de validation (pour l'instant sans persistance)
-        function toggleValidation() {
-            const checkbox = document.getElementById('validationCheckbox');
-            // Pour l'instant, juste un changement visuel
-            // TODO: Implémenter la sauvegarde de l'état de validation
-            if (checkbox.checked) {
-                console.log('Composition validée pour la semaine:', currentWeek);
-            } else {
-                console.log('Composition non validée pour la semaine:', currentWeek);
+                console.error('Erreur lors de la mise à jour de la validation:', err);
+                // Remettre la checkbox à son état précédent en cas d'erreur
+                checkbox.checked = !isChecked;
+                alert('Erreur lors de la sauvegarde de la validation');
             }
         }
         
@@ -3695,6 +3692,9 @@
         function displayWeekComposition(data) {
             const container = document.getElementById('vegetableCards');
             container.innerHTML = '';
+            
+            // Stocker les données pour l'édition
+            panierItems = [];
             
             let totalFDLB = 0;
             let totalGF = 0;
@@ -3708,8 +3708,8 @@
             }
             
             // Créer les cartes de légumes
-            data.forEach(row => {
-                const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal] = row;
+            data.forEach((row, dataIndex) => {
+                const [date, semaine, legume, producteur, unite, quantite, prixUnit, prixTotal, valide] = row;
                 const price = parseFloat(prixTotal) || 0;
                 const unitPrice = parseFloat(prixUnit) || 0;
                 const qty = quantite || '1';
@@ -3755,7 +3755,25 @@
                     return; // Passer à la ligne suivante
                 }
                 
+                // Stocker les données pour l'édition
+                const itemData = {
+                    index: dataIndex,
+                    rowIndex: currentWeekRows[dataIndex],
+                    date: date,
+                    semaine: semaine,
+                    legume: legume,
+                    producteur: producteur,
+                    unite: unite,
+                    quantite: qty,
+                    prixUnit: unitPrice,
+                    prixTotal: price,
+                    valide: valide
+                };
+                panierItems.push(itemData);
+                
                 card.className = cardClass;
+                card.onclick = () => showCompositionDetails(itemData);
+                card.style.cursor = 'pointer';
                 
                 // Formatter le prix unitaire avec virgule
                 const formattedUnitPrice = unitPrice.toFixed(2).replace('.', ',');
@@ -3820,16 +3838,213 @@
             }
         }
         
-        // Passer en mode édition
-        function editBasket() {
-            alert('Fonction d\'édition à implémenter');
-            // TODO: Implémenter la transition vers le mode édition
+        // Charger le nombre de clients prévus pour la semaine
+        async function loadWeekClientsCount(weekString) {
+            try {
+                // Obtenir les dates de la semaine
+                const weekDates = getWeekDates(weekString);
+                
+                // Charger les distributions
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Distributions!A2:B1000',
+                });
+                
+                const values = response.result.values || [];
+                const uniqueClients = new Set();
+                
+                // Filtrer les distributions de la semaine et compter les clients uniques
+                values.forEach(row => {
+                    if (row[0] && row[1]) {
+                        const distDate = new Date(row[0]);
+                        // Vérifier si la date est dans la semaine sélectionnée
+                        if (distDate >= weekDates.start && distDate <= weekDates.end) {
+                            uniqueClients.add(row[1]); // Ajouter le nom du client
+                        }
+                    }
+                });
+                
+                // Mettre à jour l'affichage
+                document.getElementById('weekClientsCount').textContent = uniqueClients.size;
+                
+            } catch (err) {
+                console.error('Erreur chargement nombre de clients:', err);
+                document.getElementById('weekClientsCount').textContent = '0';
+            }
         }
         
         // Créer une nouvelle semaine
         function newWeek() {
             alert('Fonction nouvelle semaine à implémenter');
             // TODO: Implémenter la création d'une nouvelle semaine
+        }
+        
+        // Afficher les détails d'un item de composition
+        function showCompositionDetails(item) {
+            const panel = document.getElementById('compositionDetailsPanel');
+            const content = document.getElementById('compositionDetailsContent');
+            
+            // Stocker l'item actuel
+            currentCompositionItem = item;
+            
+            const priceDisplay = item.prixUnit.toFixed(2).replace('.', ',');
+            
+            content.innerHTML = `
+                <div style="padding: 20px 20px 10px;">
+                    <h4 style="margin: 0 0 20px 0; color: #5A9041; font-size: 18px;">${item.legume}</h4>
+                </div>
+                
+                <form id="compositionEditForm">
+                    <div class="composition-form-group">
+                        <label>Producteur</label>
+                        <select id="editProducteur" onchange="updateCompositionField('producteur', this.value)">
+                            <option value="Ferme de la Brissonnerie" ${item.producteur === 'Ferme de la Brissonnerie' ? 'selected' : ''}>Ferme de la Brissonnerie</option>
+                            <option value="Géoferme" ${item.producteur === 'Géoferme' ? 'selected' : ''}>Géoferme</option>
+                            <option value="Partagé" ${item.producteur === 'Partagé' ? 'selected' : ''}>Partagé</option>
+                            <option value="Extérieur" ${item.producteur === 'Extérieur' ? 'selected' : ''}>Extérieur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="composition-form-group">
+                        <label>Unité</label>
+                        <select id="editUnite" onchange="updateCompositionField('unite', this.value)">
+                            <option value="Kg" ${item.unite === 'Kg' ? 'selected' : ''}>Kg</option>
+                            <option value="Pièce" ${item.unite === 'Pièce' ? 'selected' : ''}>Pièce</option>
+                            <option value="Botte" ${item.unite === 'Botte' ? 'selected' : ''}>Botte</option>
+                        </select>
+                    </div>
+                    
+                    <div class="composition-form-group">
+                        <label>Quantité</label>
+                        <input type="number" id="editQuantite" value="${item.quantite}" 
+                               step="0.1" min="0" onchange="updateCompositionField('quantite', this.value)">
+                    </div>
+                    
+                    <div class="composition-form-group">
+                        <label>Prix unitaire (€)</label>
+                        <input type="number" id="editPrixUnit" value="${priceDisplay}" 
+                               step="0.01" min="0" onchange="updateCompositionField('prixUnit', this.value)">
+                    </div>
+                    
+                    <div class="composition-form-group">
+                        <label>Prix total</label>
+                        <input type="text" id="editPrixTotal" value="${item.prixTotal.toFixed(2)} €" 
+                               disabled style="background: #f5f5f5; font-weight: bold;">
+                    </div>
+                    
+                    <div class="composition-action-btns">
+                        <button type="button" class="composition-action-btn calculate" onclick="recalculateTotal()">
+                            🔄 Recalculer le total
+                        </button>
+                    </div>
+                </form>
+                
+                <button class="delete-composition-btn" onclick="deleteCompositionItem()">
+                    🗑️ Supprimer ce légume
+                </button>
+            `;
+            
+            panel.classList.remove('hidden');
+            setTimeout(() => panel.classList.add('show'), 10);
+        }
+        
+        // Masquer les détails
+        function hideCompositionDetails() {
+            const panel = document.getElementById('compositionDetailsPanel');
+            panel.classList.remove('show');
+            setTimeout(() => panel.classList.add('hidden'), 300);
+            currentCompositionItem = null;
+        }
+        
+        // Mettre à jour un champ
+        async function updateCompositionField(field, value) {
+            if (!currentCompositionItem) return;
+            
+            // Mettre à jour la valeur localement
+            if (field === 'quantite') {
+                currentCompositionItem.quantite = value;
+            } else if (field === 'prixUnit') {
+                currentCompositionItem.prixUnit = parseFloat(value.replace(',', '.')) || 0;
+            } else if (field === 'producteur') {
+                currentCompositionItem.producteur = value;
+            } else if (field === 'unite') {
+                currentCompositionItem.unite = value;
+            }
+            
+            // Recalculer le prix total
+            const qty = parseFloat(currentCompositionItem.quantite) || 0;
+            const price = parseFloat(currentCompositionItem.prixUnit) || 0;
+            currentCompositionItem.prixTotal = qty * price;
+            
+            // Mettre à jour l'affichage du prix total
+            document.getElementById('editPrixTotal').value = currentCompositionItem.prixTotal.toFixed(2) + ' €';
+            
+            // Sauvegarder dans le Google Sheet
+            try {
+                const rowIndex = currentCompositionItem.rowIndex;
+                
+                await gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: `Composition des paniers!D${rowIndex}:H${rowIndex}`,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: {
+                        values: [[
+                            currentCompositionItem.producteur,
+                            currentCompositionItem.unite,
+                            currentCompositionItem.quantite,
+                            currentCompositionItem.prixUnit,
+                            currentCompositionItem.prixTotal
+                        ]]
+                    }
+                });
+                
+                // Recharger les données pour mettre à jour l'affichage
+                await loadWeekData();
+                
+            } catch (err) {
+                console.error('Erreur lors de la mise à jour:', err);
+                alert('Erreur lors de la sauvegarde');
+            }
+        }
+        
+        // Supprimer un item
+        async function deleteCompositionItem() {
+            if (!currentCompositionItem) return;
+            
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer "${currentCompositionItem.legume}" de la composition ?`)) {
+                return;
+            }
+            
+            try {
+                const rowIndex = currentCompositionItem.rowIndex;
+                
+                // Effacer la ligne dans le Google Sheet
+                await gapi.client.sheets.spreadsheets.values.clear({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: `Composition des paniers!A${rowIndex}:I${rowIndex}`
+                });
+                
+                hideCompositionDetails();
+                await loadWeekData();
+                
+            } catch (err) {
+                console.error('Erreur lors de la suppression:', err);
+                alert('Erreur lors de la suppression');
+            }
+        }
+        
+        // Recalculer le total
+        function recalculateTotal() {
+            if (!currentCompositionItem) return;
+            
+            const qty = parseFloat(document.getElementById('editQuantite').value) || 0;
+            const price = parseFloat(document.getElementById('editPrixUnit').value.replace(',', '.')) || 0;
+            const total = qty * price;
+            
+            document.getElementById('editPrixTotal').value = total.toFixed(2) + ' €';
+            
+            // Sauvegarder automatiquement
+            updateCompositionField('prixUnit', price.toString());
         }
     </script>
 </body>
